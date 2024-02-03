@@ -16,7 +16,7 @@ export default new Vuex.Store({
   },
   getters: {
     isAdmin(state) {
-      let index = state.account.roles.findIndex(item => item === 'ROLE_ADMIN')
+      let index = state.account.roles?.findIndex(item => item === 'ROLE_ADMIN')
       return index > -1
     },
 

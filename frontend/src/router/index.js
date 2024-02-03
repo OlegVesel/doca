@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../pages/HomeView.vue'
+import HomePage from '@/pages/HomePage.vue'
 import LoginPage from "@/pages/LoginPage";
+import DocumentList from "@/pages/documents/DocumentList";
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView  },
+  { path: '/', name: 'home', component: HomePage  },
+  { path: '/users/:id/documents', name: 'documentList', component: DocumentList  },
   { path: '/login', name: 'login', component: LoginPage, meta: { loginPage: true, nonRequiresAuth: true } }
 ]
 

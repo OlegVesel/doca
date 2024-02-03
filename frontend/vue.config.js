@@ -7,11 +7,6 @@ let baseUrl = {
 };
 
 module.exports = defineConfig({
-  transpileDependencies: true
-})
-
-
-module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
@@ -21,4 +16,4 @@ module.exports = {
       '/api/*' : baseUrl,
     }
   }
-}
+})
