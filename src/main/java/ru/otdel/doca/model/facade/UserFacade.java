@@ -1,12 +1,13 @@
 package ru.otdel.doca.model.facade;
 
 import org.springframework.stereotype.Component;
+import ru.otdel.doca.model.entity.Role;
 import ru.otdel.doca.model.entity.UserEntity;
 import ru.otdel.doca.model.request.UserRequest;
 import ru.otdel.doca.model.response.UserResponse;
 
 @Component
-public class UserFacade implements BaseFacade<UserEntity, UserRequest, UserResponse>{
+public class UserFacade implements BaseFacade<UserEntity, UserRequest, UserResponse> {
     @Override
     public UserEntity requestToEntity(UserRequest request) {
         return null;
@@ -19,7 +20,11 @@ public class UserFacade implements BaseFacade<UserEntity, UserRequest, UserRespo
         response.setFirstName(entity.getFirstName());
         response.setLastName(entity.getLastName());
         response.setPatronymic(entity.getPatronymic());
-
+        response.setRoles(entity.getRoles()
+                .stream()
+                .map(Role::getName)
+                .toList()
+        );
         return response;
     }
 }

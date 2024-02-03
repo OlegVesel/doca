@@ -12,7 +12,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
+## front ###
+/frontend/node_modules
 ### IntelliJ IDEA ###
 .idea
 *.iws

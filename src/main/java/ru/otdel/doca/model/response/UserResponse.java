@@ -1,7 +1,9 @@
 package ru.otdel.doca.model.response;
 
-import lombok.Builder;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class UserResponse {
@@ -11,4 +13,5 @@ public class UserResponse {
     private String patronymic;
     private String accessToken;
     private String tokenType = "Bearer_";
+    private List<String> roles = new ArrayList<>();
 }
