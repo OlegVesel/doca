@@ -1,8 +1,8 @@
 package ru.otdel.doca.model.facade;
 
 import org.springframework.stereotype.Component;
-import ru.otdel.doca.model.entity.Role;
-import ru.otdel.doca.model.entity.UserEntity;
+import ru.otdel.doca.model.entity.user.Role;
+import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.request.UserRequest;
 import ru.otdel.doca.model.response.UserResponse;
 

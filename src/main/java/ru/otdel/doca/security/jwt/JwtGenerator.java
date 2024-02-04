@@ -24,9 +24,7 @@ public class JwtGenerator {
     public String createToken(Authentication authentication)  {
         String login = authentication.getName();
         Date now = new Date();
-        System.out.println(now);
         Date expire = new Date(now.getTime() + JWT_EXPIRATON);
-        System.out.println(expire);
         return Jwts.builder()
                 .setSubject(login)
                 .setIssuedAt(now)

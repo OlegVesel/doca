@@ -14,6 +14,7 @@ module.exports = defineConfig({
     port: 3000,
     proxy: {
       '/api/*' : baseUrl,
+      '/auth/*' : baseUrl,
     }
   }
 })

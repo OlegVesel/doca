@@ -22,11 +22,15 @@
                 />
             </v-dialog>
         </v-row>
+        <v-row v-for="card in getCards" :key="card.id">
+            {{card.id}}
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import CreateCardDocument from "@/components/document/CreateCardDocument";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "DocumentList",
@@ -37,6 +41,15 @@ export default {
     },
     components: {
         CreateCardDocument
+    },
+    computed:{
+        ...mapGetters(['getCards'])
+    },
+    methods:{
+        ...mapActions(['getCardsFromServer'])
+    },
+    beforeMount() {
+        this.getCardsFromServer()
     }
 }
 </script>

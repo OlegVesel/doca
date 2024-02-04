@@ -1,9 +1,10 @@
-package ru.otdel.doca.model.entity;
+package ru.otdel.doca.model.entity.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.otdel.doca.model.entity.BaseEntity;
 
 import java.util.List;
 

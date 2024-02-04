@@ -25,7 +25,7 @@
             <v-list-item-icon color="error">
                 <v-icon class="red--text">mdi-account-arrow-right-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title >Выйти</v-list-item-title>
+            <v-list-item-title >({{account.login}}) Выйти</v-list-item-title>
         </v-list-item>
     </v-list>
 </template>
@@ -39,9 +39,12 @@ export default {
         return {}
     },
     computed: {
-        ...mapGetters(['isAdmin']),
+        ...mapGetters(['isAdmin', 'getAccount']),
         admin() {
             return this.isAdmin
+        },
+        account(){
+            return this.getAccount
         }
     },
     methods: {

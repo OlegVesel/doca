@@ -9,6 +9,7 @@
         <v-card-actions>
             <v-btn
                     color="success"
+                    @click="save"
             >
                 Создать
             </v-btn>
@@ -23,8 +24,23 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
-    name: "CreateCardDocument"
+    name: "CreateCardDocument",
+    data(){
+        return{
+            card:{
+                id : null,
+                userId : null,
+            }
+        }
+    },
+    methods:{
+        ...mapActions(['saveCard']),
+        async save(){
+            await this.saveCard(this.card)
+        }
+    }
 }
 </script>
 

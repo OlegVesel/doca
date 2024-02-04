@@ -11,7 +11,7 @@ import ru.otdel.doca.model.response.UserResponse;
 import ru.otdel.doca.service.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

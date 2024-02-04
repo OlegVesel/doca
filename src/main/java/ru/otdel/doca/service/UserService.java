@@ -1,15 +1,14 @@
 package ru.otdel.doca.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.otdel.doca.model.entity.Role;
-import ru.otdel.doca.model.entity.UserEntity;
+import ru.otdel.doca.model.entity.user.Role;
+import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.facade.UserFacade;
 import ru.otdel.doca.model.request.UserRequest;
 import ru.otdel.doca.model.response.UserResponse;
@@ -19,7 +18,6 @@ import ru.otdel.doca.security.jwt.JwtGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
