@@ -14,22 +14,29 @@
             <!--            диалог для создания карточки-->
             <v-dialog
                     v-model="showCreateCard"
-                    max-width="400"
+                    max-width="800"
                     persistent
             >
                 <create-card-document
-                    @cancel="showCreateCard = false"
+                        @cancel="showCreateCard = false"
                 />
             </v-dialog>
         </v-row>
-        <v-row v-for="card in getCards" :key="card.id">
-            {{card.id}}
+        <v-row v-for="card in getCards"
+               :key="card.id">
+            <v-col class="px-0 py-1">
+                <document-row
+                        :card="card"
+                />
+            </v-col>
         </v-row>
+
     </v-container>
 </template>
 
 <script>
 import CreateCardDocument from "@/components/document/CreateCardDocument";
+import DocumentRow from "@/components/document/DocumentRow";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
@@ -40,12 +47,12 @@ export default {
         }
     },
     components: {
-        CreateCardDocument
+        CreateCardDocument, DocumentRow
     },
-    computed:{
+    computed: {
         ...mapGetters(['getCards'])
     },
-    methods:{
+    methods: {
         ...mapActions(['getCardsFromServer'])
     },
     beforeMount() {

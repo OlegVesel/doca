@@ -3,6 +3,7 @@ package ru.otdel.doca.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otdel.doca.model.entity.document.Card;
 import ru.otdel.doca.model.facade.document.CardFacade;
 import ru.otdel.doca.model.request.document.CardRequest;
@@ -17,6 +18,7 @@ public class CardService {
     private final CardRepo cardRepo;
     private final CardFacade cardFacade;
 
+    @Transactional
     public CardResponse saveCard(CardRequest request){
         Card card = cardFacade.requestToEntity(request);
         Card save = cardRepo.save(card);

@@ -33,4 +33,12 @@ public class CardController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PutMapping
+    public ResponseEntity<CardResponse> update(@RequestBody CardRequest request){
+        CardResponse response = cardService.saveCard(request);
+        if (response != null)
+            return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().build();
+    }
+
 }

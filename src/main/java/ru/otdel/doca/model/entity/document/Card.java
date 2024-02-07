@@ -12,11 +12,14 @@ import java.util.List;
 @Data
 public class Card extends BaseEntity {
 
+    @Column(name = "title", length = 100)
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "user_login", referencedColumnName = "login")
     private UserEntity user;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "cards_docs",
             joinColumns = {@JoinColumn(name = "card_id")},

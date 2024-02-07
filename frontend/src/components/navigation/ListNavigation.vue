@@ -2,7 +2,7 @@
     <v-list
             nav
     >
-        <v-list-item @click="goTo('documentList')">
+        <v-list-item link to="/documents" selectable color="primary">
             <v-list-item-icon>
                 <v-icon>mdi-folder-outline</v-icon>
             </v-list-item-icon>
@@ -25,7 +25,7 @@
             <v-list-item-icon color="error">
                 <v-icon class="red--text">mdi-account-arrow-right-outline</v-icon>
             </v-list-item-icon>
-            <v-list-item-title >({{account.login}}) Выйти</v-list-item-title>
+            <v-list-item-title>({{ account.login }}) Выйти</v-list-item-title>
         </v-list-item>
     </v-list>
 </template>
@@ -43,15 +43,12 @@ export default {
         admin() {
             return this.isAdmin
         },
-        account(){
+        account() {
             return this.getAccount
         }
     },
     methods: {
         ...mapActions(['logoutAction']),
-        goTo(name) {
-            this.$router.push({name})
-        },
         logout() {
             this.logoutAction()
         }

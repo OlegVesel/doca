@@ -56,6 +56,21 @@ export default new Vuex.Store({
         },
         addCardToList(state, card){
             state.cards.push(card)
+        },
+        deleteCardFromList(state, card){
+            let index = state.cards.findIndex(c => c.id === card.id);
+            if (index > -1)
+            state.cards = [...state.cards.splice(0, index),
+                ...state.cards.splice(index + 1)]
+        },
+        replaceCardInList(state, card){
+            let index = state.cards.findIndex(c => c.id === card.id);
+            if (index > -1){
+                Vue.set(state.cards, index, card)
+            }
+        },
+        clearState(state){
+            state.cards = []
         }
     },
     actions: {
@@ -74,6 +89,7 @@ export default new Vuex.Store({
         },
         async logoutAction({commit}) {
             commit('clearAuth')
+            commit('clearState')
             axios.defaults.headers.common['token'] = ''
             await router.push('/login')
         },
@@ -82,7 +98,8 @@ export default new Vuex.Store({
                 let response = await cardApi.getCards()
                 commit('setCards', response.data)
             } catch (err){
-                console.log(err)
+                if (err.request.status === 401)
+                    await router.push("/login")
             }
         },
         async saveCard({commit}, card){
@@ -90,7 +107,8 @@ export default new Vuex.Store({
                 let response = await cardApi.saveCard(card)
                 commit('addCardToList', response.data)
             } catch (err){
-                console.log(err)
+                if (err.request.status === 401)
+                    await router.push("/login")
             }
         }
     },
