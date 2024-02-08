@@ -57,8 +57,8 @@ export default new Vuex.Store({
         addCardToList(state, card){
             state.cards.push(card)
         },
-        deleteCardFromList(state, card){
-            let index = state.cards.findIndex(c => c.id === card.id);
+        deleteCardFromList(state, id){
+            let index = state.cards.findIndex(c => c.id === id);
             if (index > -1)
             state.cards = [...state.cards.splice(0, index),
                 ...state.cards.splice(index + 1)]
@@ -106,6 +106,17 @@ export default new Vuex.Store({
             try{
                 let response = await cardApi.saveCard(card)
                 commit('addCardToList', response.data)
+            } catch (err){
+                if (err.request.status === 401)
+                    await router.push("/login")
+            }
+        },
+        async deleteCardFromServer({commit}, id){
+            try {
+                let response = await cardApi.deleteCard(id)
+                if (response.status === 200){
+                    commit('deleteCardFromList', id)
+                }
             } catch (err){
                 if (err.request.status === 401)
                     await router.push("/login")

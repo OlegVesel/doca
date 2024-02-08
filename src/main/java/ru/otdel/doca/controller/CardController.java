@@ -1,6 +1,7 @@
 package ru.otdel.doca.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otdel.doca.model.request.document.CardRequest;
@@ -8,6 +9,7 @@ import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.service.CardService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -39,6 +41,14 @@ public class CardController {
         if (response != null)
             return ResponseEntity.ok(response);
         return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable UUID id){
+        Boolean response = cardService.deleteCard(id);
+        if (response)
+            return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 }

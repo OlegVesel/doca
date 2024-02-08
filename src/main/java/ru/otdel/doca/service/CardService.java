@@ -11,6 +11,7 @@ import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.repo.document.CardRepo;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +32,10 @@ public class CardService {
                 .stream()
                 .map(cardFacade::entityToResponse)
                 .toList();
+    }
+
+    public Boolean deleteCard(UUID id) {
+        cardRepo.deleteById(id);
+        return true;
     }
 }

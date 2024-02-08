@@ -26,11 +26,13 @@
                         color="error"
                         icon
                         small
+                        @click="showDialogDelete = true"
                 >
                     <v-icon>mdi-delete-outline</v-icon>
                 </v-btn>
             </v-col>
         </v-row>
+        <!--        диалог для редактирования карточки-->
         <v-dialog
                 v-model="showCreateCard"
                 max-width="800"
@@ -41,11 +43,26 @@
                     :changeCard="card"
             />
         </v-dialog>
+        <!--        диалог для удаления карточки-->
+        <v-dialog
+            v-model="showDialogDelete"
+            max-width="400"
+        >
+            <confirm-dialog
+                :title-text="`Удаление карточки`"
+                :dialog-text="`Вы точно хотите удалить карточку ${card.title}?`"
+                :color="`#E57373`"
+                @cancel="showDialogDelete = false"
+                @confirm="deleteCard(card.id)"
+            />
+        </v-dialog>
     </v-card>
 </template>
 
 <script>
 import CreateCardDocument from "@/components/document/CreateCardDocument";
+import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
+import {mapActions} from "vuex";
 
 export default {
     name: "DocumentRow",
@@ -53,10 +70,17 @@ export default {
     data() {
         return {
             showCreateCard: false,
+            showDialogDelete: false,
         }
     },
     components: {
-        CreateCardDocument,
+        CreateCardDocument, ConfirmDialog
+    },
+    methods:{
+        ...mapActions(['deleteCardFromServer']),
+        deleteCard(id){
+            this.deleteCardFromServer(id)
+        }
     }
 }
 </script>
