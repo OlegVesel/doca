@@ -18,7 +18,7 @@
                         color="primary"
                         icon
                         small
-                        @click="showCreateCard = true"
+                        @click="setChangedCard(card)"
                 >
                     <v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
@@ -38,9 +38,9 @@
                 max-width="800"
                 persistent
         >
-            <create-card-document
+            <update-card-document
                     @cancel="showCreateCard = false"
-                    :changeCard="card"
+                    :changeCard="changedCard"
             />
         </v-dialog>
         <!--        диалог для удаления карточки-->
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import CreateCardDocument from "@/components/document/CreateCardDocument";
+import UpdateCardDocument from "@/components/document/UpdateCardDocument";
 import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
 import {mapActions} from "vuex";
 
@@ -71,15 +71,20 @@ export default {
         return {
             showCreateCard: false,
             showDialogDelete: false,
+            changedCard : null,
         }
     },
     components: {
-        CreateCardDocument, ConfirmDialog
+        ConfirmDialog, UpdateCardDocument
     },
     methods:{
         ...mapActions(['deleteCardFromServer']),
         deleteCard(id){
             this.deleteCardFromServer(id)
+        },
+        setChangedCard(card){
+            this.changedCard = card
+            this.showCreateCard = true
         }
     }
 }

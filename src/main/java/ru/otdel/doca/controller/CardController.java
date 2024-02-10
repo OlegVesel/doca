@@ -36,7 +36,7 @@ public class CardController {
     }
 
     @PutMapping
-    public ResponseEntity<CardResponse> update(@RequestBody CardRequest request){
+    public ResponseEntity<CardResponse> update(@ModelAttribute CardRequest request){
         CardResponse response = cardService.saveCard(request);
         if (response != null)
             return ResponseEntity.ok(response);

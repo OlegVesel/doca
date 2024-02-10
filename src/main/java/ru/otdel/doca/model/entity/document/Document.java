@@ -21,6 +21,9 @@ public class Document extends BaseEntity {
     @JoinColumn(name = "type_doc")
     private TypeDoc typeDoc;
 
-    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "data")
+    private byte[] data;
+
+    @ManyToMany(mappedBy = "documents",  cascade = CascadeType.ALL)
     private List<Card> cards;
 }

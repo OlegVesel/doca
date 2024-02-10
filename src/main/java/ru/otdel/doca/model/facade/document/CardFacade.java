@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.otdel.doca.model.entity.document.Card;
+import ru.otdel.doca.model.entity.document.Document;
 import ru.otdel.doca.model.facade.BaseFacade;
 import ru.otdel.doca.model.facade.UserFacade;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.repo.document.CardRepo;
+import ru.otdel.doca.service.DocumentService;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,19 +31,13 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
         else
             entity = new Card();
         if (request.getUserLogin() != null) {
-            entity.setUser(userRepo.findByLogin(request.getUserLogin()).orElseThrow());
+            entity.setUserLogin(request.getUserLogin());
         } else {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
-            entity.setUser(userRepo.findByLogin(login).orElseThrow());
+            entity.setUserLogin(login);
         }
         if (request.getTitle() != null)
             entity.setTitle(request.getTitle());
-        entity.setDocuments(
-                request.getDocuments()
-                        .stream()
-                        .map(documentFacade::requestToEntity)
-                        .toList()
-        );
         return entity;
     }
 
@@ -49,7 +47,9 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
         response.setId(entity.getId());
         response.setCreated(entity.getCreated());
         response.setUser(
-                userFacade.entityToResponse(entity.getUser())
+                userFacade.entityToResponse(
+                        userRepo.findByLogin(entity.getUserLogin()).orElseThrow()
+                )
         );
         response.setTitle(entity.getTitle());
         response.setDocuments(

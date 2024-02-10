@@ -10,6 +10,12 @@ spring:
     password: 1
     url: "jdbc:postgresql://localhost:5432/doca"
     clear-checksums: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 50MB
+      max-file-size: 50MB
+      max-request-size: 50MB
 jwt:
   token:
     secret: "Super1Secret2Word3To4MyToken8And9HisSoStrong"

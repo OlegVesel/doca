@@ -18,10 +18,14 @@ import java.util.UUID;
 public class CardService {
     private final CardRepo cardRepo;
     private final CardFacade cardFacade;
+    private final DocumentService documentService;
 
     @Transactional
     public CardResponse saveCard(CardRequest request){
         Card card = cardFacade.requestToEntity(request);
+        if (request.getDocuments() != null && !request.getDocuments().isEmpty()) {
+          card.getDocuments().addAll(documentService.multipartToDocument(request.getDocuments()));
+        }
         Card save = cardRepo.save(card);
         return cardFacade.entityToResponse(save);
     }

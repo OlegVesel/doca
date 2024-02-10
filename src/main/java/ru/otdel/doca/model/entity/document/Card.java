@@ -15,9 +15,11 @@ public class Card extends BaseEntity {
     @Column(name = "title", length = 100)
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "user_login", referencedColumnName = "login")
-    private UserEntity user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_login", referencedColumnName = "login")
+//    private UserEntity user;
+
+    private String userLogin;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

@@ -54,8 +54,9 @@ public class JwtGenerator {
             parser.parseClaimsJws(token);
             return true;
         } catch (Exception e){
-            e.printStackTrace();
-            throw new AuthenticationCredentialsNotFoundException("JWT not correct or expired");
+            return false;
+//            e.printStackTrace();
+//            throw new AuthenticationCredentialsNotFoundException("JWT not correct or expired");
         }
     }
 

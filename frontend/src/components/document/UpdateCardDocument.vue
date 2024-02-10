@@ -1,22 +1,22 @@
 <template>
     <v-card>
         <v-card-title>
-            Создание карточки документа
+            Редактирование карточки документа
         </v-card-title>
         <v-card-text>
             <v-text-field
                     label="Имя карточки"
                     v-model="card.title"
             />
+            <file-input
+                    @getFile="setFile"
+                />
             <v-simple-table v-if="card.documents.length > 0">
                 <template v-slot:default>
                     <thead>
                     <tr>
                         <th class="text-left">
                             Заголовок
-                        </th>
-                        <th class="text-left">
-                            Путь к файлу
                         </th>
                         <th class="text-left">
                             Тип
@@ -29,7 +29,6 @@
                             :key="doc.title"
                     >
                         <td>{{ doc.title }}</td>
-                        <td>{{ doc.pathToDoc }}</td>
                         <td>{{ doc.typeDoc?.name }}</td>
                     </tr>
                     </tbody>
@@ -39,13 +38,13 @@
         <v-card-actions>
             <v-btn
                     color="success"
-                    @click="save"
+                    @click="update"
             >
-                Создать
+                Обновить
             </v-btn>
             <v-btn
                     color="error"
-                    @click="$emit('cancel'); "
+                    @click="tempDoc = []; $emit('cancel');"
             >
                 Отмена
             </v-btn>
@@ -54,35 +53,54 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
 import cardApi from "@/api/cardApi";
+import FileInput from "@/components/document/FileInput";
+import {mapMutations} from "vuex";
 
 export default {
-    name: "CreateCardDocument",
-
+    name: "UpdateCardDocument",
+    props: ['changeCard'],
     data() {
         return {
             card: {
                 id: null,
-                userId: null,
+                userLogin: null,
                 title: null,
                 documents: []
             },
+            tempDoc:[]
         }
     },
+    components:{
+        FileInput
+    },
     methods: {
-        ...mapMutations(['addCardToList',]),
-        async save() {
+        ...mapMutations(['replaceCardInList']),
+        async update() {
             try {
-                let response = await cardApi.saveCard(this.card)
+                this.card.documents = this.tempDoc
+                let response = await cardApi.updateCard(this.card)
                 let data = response.data
-                this.addCardToList(data)
-                this.card.id = data.id
+                this.replaceCardInList(data)
             } catch (e) {
                 console.log(e)
             }
         },
+        setCard(newVal) {
+            console.log(newVal)
+            this.card.id = newVal.id
+            this.card.userLogin = newVal.user.login
+            this.card.title = newVal.title
+            this.card.documents = newVal.documents
+            this.tempDoc = []
+        },
+        setFile(files){
+            this.tempDoc = [...files]
+        }
     },
+    beforeMount() {
+        this.setCard(this.changeCard)
+    }
 }
 </script>
 
