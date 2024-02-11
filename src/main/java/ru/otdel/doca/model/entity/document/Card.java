@@ -5,6 +5,7 @@ import lombok.Data;
 import ru.otdel.doca.model.entity.BaseEntity;
 import ru.otdel.doca.model.entity.user.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,8 @@ public class Card extends BaseEntity {
 //    private UserEntity user;
 
     private String userLogin;
-
+    private String comment;
+    private LocalDate executeTo;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "cards_docs",

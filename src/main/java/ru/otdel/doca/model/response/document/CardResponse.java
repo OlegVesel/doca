@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.otdel.doca.model.response.UserResponse;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,5 +15,7 @@ public class CardResponse {
     private LocalDate created;
     private UserResponse user;
     private String title;
-    private List<DocumentResponse> documents;
+    private String comment;
+    private LocalDate executeTo;
+    private List<DocumentResponse> documents = new ArrayList<>();
 }

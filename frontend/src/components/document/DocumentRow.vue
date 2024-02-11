@@ -10,7 +10,7 @@
             </v-col>
             <v-col cols="6">
                 <v-chip color="green lighten-1">
-                    Файлов в карточке: {{card.documents.length}}
+                    Файлов в карточке: {{card.documents?.length}}
                 </v-chip>
             </v-col>
             <v-col cols="2" align="end">

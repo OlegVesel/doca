@@ -10,6 +10,8 @@ import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.repo.document.CardRepo;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public class CardService {
     public CardResponse saveCard(CardRequest request){
         Card card = cardFacade.requestToEntity(request);
         if (request.getDocuments() != null && !request.getDocuments().isEmpty()) {
-          card.getDocuments().addAll(documentService.multipartToDocument(request.getDocuments()));
+          card.getDocuments().addAll(documentService.multipartToDocument(request));
         }
         Card save = cardRepo.save(card);
         return cardFacade.entityToResponse(save);

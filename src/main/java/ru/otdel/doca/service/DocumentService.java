@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otdel.doca.model.entity.dictionary.TypeDoc;
 import ru.otdel.doca.model.entity.document.Document;
+import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.repo.document.DocumentRepo;
 import ru.otdel.doca.repo.document.TypeDocRepo;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -19,9 +19,12 @@ public class DocumentService {
     private final TypeDocRepo typeDocRepo;
     private final DocumentRepo documentRepo;
 
-    public List<Document> multipartToDocument(List<MultipartFile> multipartFiles) {
+    public List<Document> multipartToDocument(CardRequest request) {
+        List<MultipartFile> multipartFiles = request.getDocuments();
         if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            TypeDoc typeDoc = typeDocRepo.findById(UUID.fromString("bde4700c-e7f3-4844-a3c5-654802233c80")).orElse(null);
+            TypeDoc typeDoc = request.getTypeDocId() == null
+                    ? typeDocRepo.findById(UUID.fromString("bde4700c-e7f3-4844-a3c5-654802233c80")).orElse(null)
+                    : typeDocRepo.findById(request.getTypeDocId()).orElse(null);
             return multipartFiles.stream().map(file -> {
                         try {
                             Document document = new Document();

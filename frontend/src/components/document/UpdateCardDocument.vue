@@ -8,10 +8,36 @@
                     label="Имя карточки"
                     v-model="card.title"
             />
-            <file-input
-                    @getFile="setFile"
-                />
-            <v-simple-table v-if="card.documents.length > 0">
+            <date-picker
+                    :label="`Исполнить к:`"
+                    :current-date="card.executeTo"
+                    @get-date="setDate"/>
+            <v-textarea
+                    rows="2"
+                    label="Комментарий"
+                    v-model="card.comment"
+                    prepend-icon="mdi-text-box-outline"
+            />
+            <v-row>
+                <v-col>
+                    <file-input ref="fileInputForm"
+                                @getFile="setFile"
+                    />
+                </v-col>
+                <v-col>
+                    <v-autocomplete
+                            v-model="card.typeDocId"
+                            :items="types"
+                            item-value="id"
+                            item-text="name"
+                            label="Тип документа(ов)"
+                    />
+                </v-col>
+            </v-row>
+            <v-simple-table
+                    v-if="card.documents.length > 0"
+                    dense
+            >
                 <template v-slot:default>
                     <thead>
                     <tr>
@@ -26,7 +52,7 @@
                     <tbody>
                     <tr
                             v-for="doc in card.documents"
-                            :key="doc.title"
+                            :key="doc.id"
                     >
                         <td>{{ doc.title }}</td>
                         <td>{{ doc.typeDoc?.name }}</td>
@@ -55,7 +81,8 @@
 <script>
 import cardApi from "@/api/cardApi";
 import FileInput from "@/components/document/FileInput";
-import {mapMutations} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
+import DatePicker from "@/components/dialogs/DatePicker";
 
 export default {
     name: "UpdateCardDocument",
@@ -66,13 +93,37 @@ export default {
                 id: null,
                 userLogin: null,
                 title: null,
-                documents: []
+                comment: null,
+                executeTo: null,
+                documents: [],
+                typeDocId : null
             },
-            tempDoc:[]
+            type: {
+                id: null,
+                name: null
+            },
+            types: [
+                {
+                    id: 'bd767b6d-46eb-49fa-bfb3-8d210a5bfcaa',
+                    name: 'Исходящий',
+                },
+                {
+                    id: 'f8b55efa-1246-42be-bac4-30f81b0f66d6',
+                    name: 'Входящий',
+                },
+                {
+                    id: 'bde4700c-e7f3-4844-a3c5-654802233c80',
+                    name: 'Не определен',
+                }
+            ],
+            tempDoc: []
         }
     },
-    components:{
-        FileInput
+    components: {
+        FileInput, DatePicker
+    },
+    computed: {
+        ...mapGetters(['getCards']),
     },
     methods: {
         ...mapMutations(['replaceCardInList']),
@@ -82,19 +133,29 @@ export default {
                 let response = await cardApi.updateCard(this.card)
                 let data = response.data
                 this.replaceCardInList(data)
+                let newCard = this.getCards.find(card => card.id === data.id);
+                this.setCard(newCard)
             } catch (e) {
                 console.log(e)
+            } finally {
+                this.$refs.fileInputForm.clearTempDoc()
+                this.tempDoc = []
             }
         },
         setCard(newVal) {
-            console.log(newVal)
             this.card.id = newVal.id
             this.card.userLogin = newVal.user.login
             this.card.title = newVal.title
             this.card.documents = newVal.documents
+            this.card.comment = newVal.comment
+            this.card.executeTo = newVal.executeTo
+
             this.tempDoc = []
         },
-        setFile(files){
+        setDate(date) {
+            this.card.executeTo = date
+        },
+        setFile(files) {
             this.tempDoc = [...files]
         }
     },

@@ -13,6 +13,7 @@ import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.repo.document.CardRepo;
 import ru.otdel.doca.service.DocumentService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -36,6 +37,8 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
             String login = SecurityContextHolder.getContext().getAuthentication().getName();
             entity.setUserLogin(login);
         }
+        entity.setComment(request.getComment());
+        entity.setExecuteTo(request.getExecuteTo());
         if (request.getTitle() != null)
             entity.setTitle(request.getTitle());
         return entity;
@@ -52,12 +55,15 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
                 )
         );
         response.setTitle(entity.getTitle());
-        response.setDocuments(
-                entity.getDocuments()
-                        .stream()
-                        .map(documentFacade::entityToResponse)
-                        .toList()
-        );
+        response.setComment(entity.getComment());
+        response.setExecuteTo(entity.getExecuteTo());
+        if (entity.getDocuments() != null)
+            response.setDocuments(
+                    entity.getDocuments()
+                            .stream()
+                            .map(documentFacade::entityToResponse)
+                            .toList()
+            );
         return response;
     }
 }

@@ -38,6 +38,11 @@ export default {
         tempDoc(newVal){
             this.$emit('getFile', newVal)
         }
+    },
+    methods:{
+        clearTempDoc(){
+            this.tempDoc = []
+        }
     }
 
 }

@@ -99,7 +99,7 @@ export default new Vuex.Store({
                 commit('setCards', response.data)
             } catch (err){
                 if (err.request.status === 401)
-                    await router.push("/login")
+                    await router.push('login')
             }
         },
         async saveCard({commit}, card){

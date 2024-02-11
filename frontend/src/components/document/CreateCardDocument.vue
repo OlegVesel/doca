@@ -8,33 +8,15 @@
                     label="Имя карточки"
                     v-model="card.title"
             />
-            <v-simple-table v-if="card.documents.length > 0">
-                <template v-slot:default>
-                    <thead>
-                    <tr>
-                        <th class="text-left">
-                            Заголовок
-                        </th>
-                        <th class="text-left">
-                            Путь к файлу
-                        </th>
-                        <th class="text-left">
-                            Тип
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr
-                            v-for="doc in card.documents"
-                            :key="doc.title"
-                    >
-                        <td>{{ doc.title }}</td>
-                        <td>{{ doc.pathToDoc }}</td>
-                        <td>{{ doc.typeDoc?.name }}</td>
-                    </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
+            <date-picker
+                :label="`Исполнить к:`"
+                @get-date="setDate"/>
+            <v-textarea
+                    rows="2"
+                    label="Комментарий"
+                    v-model="card.comment"
+                    prepend-icon="mdi-text-box-outline"
+            />
         </v-card-text>
         <v-card-actions>
             <v-btn
@@ -56,7 +38,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import cardApi from "@/api/cardApi";
-
+import DatePicker from "@/components/dialogs/DatePicker";
 export default {
     name: "CreateCardDocument",
 
@@ -64,12 +46,14 @@ export default {
         return {
             card: {
                 id: null,
-                userId: null,
+                userLogin: null,
                 title: null,
-                documents: []
+                comment: null,
+                executeTo: null,
             },
         }
     },
+    components:{ DatePicker },
     methods: {
         ...mapMutations(['addCardToList',]),
         async save() {
@@ -77,11 +61,20 @@ export default {
                 let response = await cardApi.saveCard(this.card)
                 let data = response.data
                 this.addCardToList(data)
-                this.card.id = data.id
             } catch (e) {
                 console.log(e)
+            } finally {
+                this.$emit('cancel')
+                this.card.id = null
+                this.card.userLogin = null
+                this.card.title = null
+                this.card.comment = null
+                this.card.executeTo = null
             }
         },
+        setDate(date){
+            this.card.executeTo = date
+        }
     },
 }
 </script>
