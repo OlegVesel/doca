@@ -4,17 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.otdel.doca.model.entity.document.Card;
-import ru.otdel.doca.model.entity.document.Document;
 import ru.otdel.doca.model.facade.BaseFacade;
 import ru.otdel.doca.model.facade.UserFacade;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.repo.document.CardRepo;
-import ru.otdel.doca.service.DocumentService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

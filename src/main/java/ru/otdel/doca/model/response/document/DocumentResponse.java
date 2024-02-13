@@ -14,4 +14,5 @@ public class DocumentResponse {
     private String pathToDoc;
     private TypeDoc typeDoc;
     private UUID cardId;
+    private Boolean isDeleted;
 }

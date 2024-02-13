@@ -27,7 +27,7 @@
                 <v-col>
                     <v-autocomplete
                             v-model="card.typeDocId"
-                            :items="types"
+                            :items="getTypeDocs"
                             item-value="id"
                             item-text="name"
                             label="Тип документа(ов)"
@@ -47,6 +47,9 @@
                         <th class="text-left">
                             Тип
                         </th>
+                        <th class="text-left">
+                            Действия
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,6 +59,15 @@
                     >
                         <td>{{ doc.title }}</td>
                         <td>{{ doc.typeDoc?.name }}</td>
+                        <td>
+                            <v-btn
+                                icon
+                                x-small
+                                @click="deleteFile(doc.id)"
+                            >
+                                <v-icon color="error">mdi-delete-outline</v-icon>
+                            </v-btn>
+                        </td>
                     </tr>
                     </tbody>
                 </template>
@@ -81,7 +93,7 @@
 <script>
 import cardApi from "@/api/cardApi";
 import FileInput from "@/components/document/FileInput";
-import {mapGetters, mapMutations} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import DatePicker from "@/components/dialogs/DatePicker";
 
 export default {
@@ -102,20 +114,7 @@ export default {
                 id: null,
                 name: null
             },
-            types: [
-                {
-                    id: 'bd767b6d-46eb-49fa-bfb3-8d210a5bfcaa',
-                    name: 'Исходящий',
-                },
-                {
-                    id: 'f8b55efa-1246-42be-bac4-30f81b0f66d6',
-                    name: 'Входящий',
-                },
-                {
-                    id: 'bde4700c-e7f3-4844-a3c5-654802233c80',
-                    name: 'Не определен',
-                }
-            ],
+            types: [],
             tempDoc: []
         }
     },
@@ -123,13 +122,14 @@ export default {
         FileInput, DatePicker
     },
     computed: {
-        ...mapGetters(['getCards']),
+        ...mapGetters(['getCards', 'getTypeDocs']),
     },
     methods: {
         ...mapMutations(['replaceCardInList']),
+        ...mapActions(['getTypeDocsFromServer']),
         async update() {
             try {
-                this.card.documents = this.tempDoc
+                this.card['multipartFiles'] = this.tempDoc
                 let response = await cardApi.updateCard(this.card)
                 let data = response.data
                 this.replaceCardInList(data)
@@ -157,10 +157,13 @@ export default {
         },
         setFile(files) {
             this.tempDoc = [...files]
-        }
+        },
+        // deleteFile(id)
     },
     beforeMount() {
-        this.setCard(this.changeCard)
+        this.setCard(this.changeCard);
+        if (!this.getTypeDocs.length > 0)
+            this.getTypeDocsFromServer()
     }
 }
 </script>

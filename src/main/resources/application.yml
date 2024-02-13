@@ -16,6 +16,8 @@ spring:
       file-size-threshold: 50MB
       max-file-size: 50MB
       max-request-size: 50MB
+  jpa:
+    show-sql: true
 jwt:
   token:
     secret: "Super1Secret2Word3To4MyToken8And9HisSoStrong"

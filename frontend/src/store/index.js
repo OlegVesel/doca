@@ -4,6 +4,7 @@ import createPersistedState from "vuex-persistedstate"
 import router from "../router/index"
 import authApi from "@/api/authApi";
 import cardApi from "@/api/cardApi";
+import dictionaryApi from "@/api/dictionaryApi";
 import axios from "axios";
 
 Vue.use(Vuex)
@@ -15,6 +16,7 @@ export default new Vuex.Store({
         isAuthenticated: localStorage.getItem('auth'),
         account: {},
         cards:[],
+        typeDocs:[],
     },
     getters: {
         isAdmin(state) {
@@ -31,6 +33,9 @@ export default new Vuex.Store({
         getCards(state){
             return state.cards
         },
+        getTypeDocs(state){
+            return state.typeDocs
+        }
     },
     mutations: {
         setAuth(state, payload) {
@@ -60,8 +65,8 @@ export default new Vuex.Store({
         deleteCardFromList(state, id){
             let index = state.cards.findIndex(c => c.id === id);
             if (index > -1)
-            state.cards = [...state.cards.splice(0, index),
-                ...state.cards.splice(index + 1)]
+            state.cards = [...state.cards.slice(0, index),
+                ...state.cards.slice(index + 1)]
         },
         replaceCardInList(state, card){
             let index = state.cards.findIndex(c => c.id === card.id);
@@ -71,6 +76,9 @@ export default new Vuex.Store({
         },
         clearState(state){
             state.cards = []
+        },
+        setTypeDocs(state, typeDocs){
+            state.typeDocs = typeDocs
         }
     },
     actions: {
@@ -116,6 +124,17 @@ export default new Vuex.Store({
                 let response = await cardApi.deleteCard(id)
                 if (response.status === 200){
                     commit('deleteCardFromList', id)
+                }
+            } catch (err){
+                if (err.request.status === 401)
+                    await router.push("/login")
+            }
+        },
+        async getTypeDocsFromServer({commit}){
+            try {
+                let response = await dictionaryApi.getAllTypeDocs()
+                if (response.status === 200){
+                    commit('setTypeDocs', response.data)
                 }
             } catch (err){
                 if (err.request.status === 401)

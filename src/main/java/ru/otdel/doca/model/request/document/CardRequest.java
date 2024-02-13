@@ -15,5 +15,5 @@ public class CardRequest {
     private String comment;
     private LocalDate executeTo;
     private UUID typeDocId;
-    private List<MultipartFile> documents;
+    private List<MultipartFile> multipartFiles;
 }

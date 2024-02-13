@@ -24,6 +24,6 @@ public class Document extends BaseEntity {
     @Column(name = "data")
     private byte[] data;
 
-    @ManyToMany(mappedBy = "documents",  cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "documents",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Card> cards;
 }

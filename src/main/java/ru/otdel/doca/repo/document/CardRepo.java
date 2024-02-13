@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CardRepo extends JpaRepository<Card, UUID> {
-
-    List<Card> findAllByUserLogin(String login);
+    List<Card> findByUserLoginAndIsDeleted(String userLogin, Boolean isDeleted);
 }

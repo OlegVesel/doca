@@ -37,7 +37,8 @@ public class DocumentFacade implements BaseFacade<Document, DocumentRequest, Doc
         response.setId(entity.getId());
         response.setTypeDoc(entity.getTypeDoc());
         response.setTitle(entity.getTitle());
-        response.setPathToDoc(entity.getPathToDoc());
+        response.setCreated(entity.getCreated());
+        response.setIsDeleted(entity.getIsDeleted());
         return response;
     }
 }

@@ -15,7 +15,6 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private LocalDate created;
-    @LastModifiedDate
     private LocalDate updated;
     private Boolean isDeleted;
 

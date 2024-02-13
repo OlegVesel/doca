@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
-import ru.otdel.doca.service.CardService;
+import ru.otdel.doca.service.documents.CardService;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,8 +44,8 @@ public class CardController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable UUID id){
-        Boolean response = cardService.deleteCard(id);
+    public ResponseEntity<Boolean> softDelete(@PathVariable UUID id){
+        Boolean response = cardService.softDeleteCardById(id);
         if (response)
             return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
