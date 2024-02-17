@@ -4,6 +4,7 @@ import createPersistedState from "vuex-persistedstate"
 import router from "../router/index"
 import authApi from "@/api/authApi";
 import cardApi from "@/api/cardApi";
+import documentApi from "@/api/documentApi";
 import dictionaryApi from "@/api/dictionaryApi";
 import axios from "axios";
 
@@ -136,6 +137,30 @@ export default new Vuex.Store({
                 if (response.status === 200){
                     commit('setTypeDocs', response.data)
                 }
+            } catch (err){
+                if (err.request.status === 401)
+                    await router.push("/login")
+            }
+        },
+        async deleteFileFromCard({commit}, id){
+            try {
+                let { status } = await documentApi.softDeleteDocument(id)
+                if (status === 200){
+                    console.log('success')
+                } else
+                    commit('')
+            } catch (err){
+                if (err.request.status === 401)
+                    await router.push("/login")
+            }
+        },
+        async hardDeleteFileFromCard({commit}, id){
+            try {
+                let { status } = await documentApi.hardDeleteDocument(id)
+                if (status === 200){
+                    console.log('success')
+                } else
+                    commit('')
             } catch (err){
                 if (err.request.status === 401)
                     await router.push("/login")

@@ -18,6 +18,8 @@ spring:
       max-request-size: 50MB
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
 jwt:
   token:
     secret: "Super1Secret2Word3To4MyToken8And9HisSoStrong"

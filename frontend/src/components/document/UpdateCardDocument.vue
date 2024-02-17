@@ -56,14 +56,22 @@
                     <tr
                             v-for="doc in card.documents"
                             :key="doc.id"
+                            :class="{ isDeleted : doc.isDeleted }"
                     >
                         <td>{{ doc.title }}</td>
                         <td>{{ doc.typeDoc?.name }}</td>
                         <td>
-                            <v-btn
-                                icon
-                                x-small
-                                @click="deleteFile(doc.id)"
+                            <v-btn v-if="!doc.isDeleted"
+                                   icon
+                                   x-small
+                                   @click="prepareDocForDelete(doc)"
+                            >
+                                <v-icon color="error">mdi-delete-outline</v-icon>
+                            </v-btn>
+                            <v-btn v-else
+                                   icon
+                                   x-small
+                                   @click="prepareDocForDelete(doc)"
                             >
                                 <v-icon color="error">mdi-delete-outline</v-icon>
                             </v-btn>
@@ -72,6 +80,17 @@
                     </tbody>
                 </template>
             </v-simple-table>
+            <v-dialog
+                    v-model="showDialogDelete"
+                    max-width="400">
+                <confirm-dialog
+                        :title-text="`Удаление документа`"
+                        :dialog-text=textForDelete
+                        :color="`#E57373`"
+                        @cancel="showDialogDelete = false; idDocForDelete = null"
+                        @confirm="deleteFile"
+                />
+            </v-dialog>
         </v-card-text>
         <v-card-actions>
             <v-btn
@@ -93,8 +112,9 @@
 <script>
 import cardApi from "@/api/cardApi";
 import FileInput from "@/components/document/FileInput";
-import {mapActions, mapGetters, mapMutations} from "vuex";
 import DatePicker from "@/components/dialogs/DatePicker";
+import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 
 export default {
     name: "UpdateCardDocument",
@@ -108,25 +128,26 @@ export default {
                 comment: null,
                 executeTo: null,
                 documents: [],
-                typeDocId : null
+                typeDocId: null
             },
-            type: {
-                id: null,
-                name: null
+            docForDelete: {
+                id : null,
+                isDeleted : false,
             },
-            types: [],
+            textForDelete : '',
+            showDialogDelete: false,
             tempDoc: []
         }
     },
     components: {
-        FileInput, DatePicker
+        FileInput, DatePicker, ConfirmDialog
     },
     computed: {
         ...mapGetters(['getCards', 'getTypeDocs']),
     },
     methods: {
         ...mapMutations(['replaceCardInList']),
-        ...mapActions(['getTypeDocsFromServer']),
+        ...mapActions(['getTypeDocsFromServer', 'deleteFileFromCard', 'hardDeleteFileFromCard']),
         async update() {
             try {
                 this.card['multipartFiles'] = this.tempDoc
@@ -144,7 +165,7 @@ export default {
         },
         setCard(newVal) {
             this.card.id = newVal.id
-            this.card.userLogin = newVal.user.login
+            this.card.userLogin = newVal.userLogin
             this.card.title = newVal.title
             this.card.documents = newVal.documents
             this.card.comment = newVal.comment
@@ -158,7 +179,29 @@ export default {
         setFile(files) {
             this.tempDoc = [...files]
         },
-        // deleteFile(id)
+        prepareDocForDelete(doc){
+            let {id ,isDeleted } = doc
+            this.docForDelete.id = id
+            this.docForDelete.isDeleted = isDeleted
+            if (isDeleted)
+                this.textForDelete = 'Документ будет полностью удален без возможности восстановления'
+            else
+                this.textForDelete = 'Вы точно хотите удалить документ? Его еще можно будет восстановить'
+            this.showDialogDelete = true
+        },
+        deleteFile() {
+            if (this.docForDelete.isDeleted){
+                this.hardDeleteFileFromCard(this.docForDelete.id)
+                let index = this.card.documents.findIndex(d => d.id === this.docForDelete.id);
+                this.card.documents = [...this.card.documents.slice(0, index),
+                    ...this.card.documents.slice(index + 1)]
+            } else {
+                this.deleteFileFromCard(this.docForDelete.id)
+                let doc = this.card.documents.find(d => d.id === this.docForDelete.id);
+                doc.isDeleted = true
+            }
+            this.showDialogDelete = false
+        }
     },
     beforeMount() {
         this.setCard(this.changeCard);
@@ -169,5 +212,10 @@ export default {
 </script>
 
 <style scoped>
-
+.isDeleted {
+    background-color: #f8a1a1;
+}
+.isDeleted:hover {
+    background-color: #f8a1a1 !important;
+}
 </style>

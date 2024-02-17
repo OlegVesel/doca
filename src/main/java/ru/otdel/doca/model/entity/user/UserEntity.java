@@ -24,8 +24,7 @@ public class UserEntity extends BaseEntity {
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "userLogin", fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "userLogin", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Card> cards;
 
     private String firstName;

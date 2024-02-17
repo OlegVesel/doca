@@ -44,7 +44,7 @@ create table cards
     id      uuid not null
         constraint cards_pk
             primary key,
-    user_id uuid not null,
+    user_login uuid not null,
     created   date,
     updated   date,
     is_deleted BOOLEAN

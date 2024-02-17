@@ -3,14 +3,15 @@ package ru.otdel.doca.model.entity.document;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.otdel.doca.model.entity.BaseEntity;
-import ru.otdel.doca.model.entity.user.UserEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "cards")
 @Data
+
 public class Card extends BaseEntity {
 
     @Column(name = "title", length = 100)
@@ -23,5 +24,5 @@ public class Card extends BaseEntity {
             name = "cards_docs",
             joinColumns = {@JoinColumn(name = "card_id")},
             inverseJoinColumns = {@JoinColumn(name = "doc_id")})
-    private List<Document> documents;
+    private List<Document> documents = new ArrayList<>();
 }

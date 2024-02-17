@@ -44,11 +44,7 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
         CardResponse response = new CardResponse();
         response.setId(entity.getId());
         response.setCreated(entity.getCreated());
-        response.setUser(
-                userFacade.entityToResponse(
-                        userRepo.findByLogin(entity.getUserLogin()).orElseThrow()
-                )
-        );
+        response.setUserLogin(entity.getUserLogin());
         response.setTitle(entity.getTitle());
         response.setComment(entity.getComment());
         response.setExecuteTo(entity.getExecuteTo());

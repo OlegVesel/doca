@@ -2,10 +2,10 @@ package ru.otdel.doca.service.documents;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otdel.doca.model.entity.dictionary.TypeDoc;
 import ru.otdel.doca.model.entity.document.Document;
-import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.repo.document.DocumentRepo;
 import ru.otdel.doca.repo.document.TypeDocRepo;
 
@@ -55,6 +55,13 @@ public class DocumentService {
             return false;
         document.setIsDeleted(true);
         documentRepo.save(document);
+        return true;
+    }
+
+    @Transactional
+    public Boolean hardDeleteById(UUID id) {
+        documentRepo.deleteRelation(id);
+        documentRepo.deleteById(id);
         return true;
     }
 }

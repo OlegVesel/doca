@@ -1,7 +1,6 @@
 package ru.otdel.doca.model.response.document;
 
 import lombok.Data;
-import ru.otdel.doca.model.response.UserResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public class CardResponse {
     private UUID id;
     private LocalDate created;
-    private UserResponse user;
+    private String userLogin;
     private String title;
     private String comment;
     private LocalDate executeTo;

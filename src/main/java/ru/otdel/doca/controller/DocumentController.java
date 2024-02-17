@@ -25,5 +25,13 @@ public class DocumentController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @DeleteMapping("/{id}/hard")
+    public ResponseEntity<Boolean> hardDeleteById(@PathVariable UUID id){
+        Boolean response = documentService.hardDeleteById(id);
+        if (response)
+            return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
 
 }

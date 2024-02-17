@@ -24,6 +24,11 @@ public class Document extends BaseEntity {
     @Column(name = "data")
     private byte[] data;
 
-    @ManyToMany(mappedBy = "documents",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "documents")
     private List<Card> cards;
+
+    public void removeCard(Card card){
+        this.cards.remove(card);
+        card.getDocuments().remove(this);
+    }
 }
