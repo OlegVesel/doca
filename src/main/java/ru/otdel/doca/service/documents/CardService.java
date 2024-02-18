@@ -1,15 +1,18 @@
 package ru.otdel.doca.service.documents;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otdel.doca.model.entity.document.Card;
+import ru.otdel.doca.model.entity.document.Document;
 import ru.otdel.doca.model.facade.document.CardFacade;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.repo.document.CardRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,5 +48,22 @@ public class CardService {
         card.setIsDeleted(true);
         cardRepo.save(card);
         return true;
+    }
+
+    public Card copyCardById(UUID cardId, String newUserLogin){
+        Card oldCard = cardRepo.findById(cardId).orElse(null);
+        if (oldCard == null)
+            return null;
+        List<Document> newDocs = new ArrayList<>();
+        for (Document oldDoc : oldCard.getDocuments()) {
+            Document newDoc = new Document();
+            BeanUtils.copyProperties(oldDoc, newDoc, "id", "updated", "created", "cards");
+            newDocs.add(newDoc);
+        }
+        Card newCard = new Card();
+        BeanUtils.copyProperties(oldCard, newCard, "id", "updated", "created", "executeTo", "userLogin", "documents");
+        newCard.setUserLogin(newUserLogin);
+        newCard.setDocuments(newDocs);
+        return cardRepo.save(newCard);
     }
 }
