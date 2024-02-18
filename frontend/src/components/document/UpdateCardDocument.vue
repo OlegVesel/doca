@@ -75,6 +75,14 @@
                             >
                                 <v-icon color="error">mdi-delete-outline</v-icon>
                             </v-btn>
+                            <v-btn
+                                    color="primary"
+                                    icon
+                                    x-small
+                                    @click="getDocument(doc)"
+                            >
+                                <v-icon>mdi-arrow-down-bold-circle-outline</v-icon>
+                            </v-btn>
                         </td>
                     </tr>
                     </tbody>
@@ -111,6 +119,7 @@
 
 <script>
 import cardApi from "@/api/cardApi";
+import documentApi from "@/api/documentApi";
 import FileInput from "@/components/document/FileInput";
 import DatePicker from "@/components/dialogs/DatePicker";
 import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
@@ -201,6 +210,17 @@ export default {
                 doc.isDeleted = true
             }
             this.showDialogDelete = false
+        },
+        async getDocument(doc){
+            let { data } = await documentApi.print(doc.id)
+            const href = URL.createObjectURL(data);
+            const link = document.createElement('a');
+            link.href = href;
+            link.setAttribute('download', doc.title); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(href);
         }
     },
     beforeMount() {

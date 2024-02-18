@@ -1,6 +1,8 @@
 package ru.otdel.doca.service.documents;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,5 +65,13 @@ public class DocumentService {
         documentRepo.deleteRelation(id);
         documentRepo.deleteById(id);
         return true;
+    }
+
+    public Document getDocumentById(UUID id) {
+        Document document = documentRepo.findById(id).orElse(null);
+        if (document == null)
+            return null;
+
+        return document;
     }
 }
