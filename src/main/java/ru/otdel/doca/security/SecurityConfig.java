@@ -28,13 +28,12 @@ public class SecurityConfig {
                 .exceptionHandling(handle -> handle.authenticationEntryPoint(jwtEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/ws").permitAll()
                         .requestMatchers("/api/**").authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtFilterAuthentication, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 
 }

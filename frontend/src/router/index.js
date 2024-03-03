@@ -17,21 +17,6 @@ const router = new VueRouter({
     routes
 })
 
-// router.beforeEach(to => {
-//     // Judgment whether the target route is login, if it is a different verification permission (directly return TRUE), vice versail permissions
-//     if (to.name === 'login') {
-//         return true
-//     } else {
-//         // Judgment if the user is already logged in, note that this is a string to determine the string
-//         if (localStorage.getItem('auth')) {
-//             return true
-//         } else {
-//             return {
-//                 path: '/login'
-//             }
-//         }
-//     }
-// })
 router.beforeEach((to, from, next) => {
     const requiresAuth = !to.matched.some((record) => record.meta.nonRequiresAuth)
     const isLoginPage = to.matched.some((record) => record.meta.loginPage)

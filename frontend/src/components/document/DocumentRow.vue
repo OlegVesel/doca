@@ -30,6 +30,14 @@
                 >
                     <v-icon>mdi-delete-outline</v-icon>
                 </v-btn>
+                <v-btn
+                        color="indigo"
+                        icon
+                        small
+                        @click="showOrderForm = true"
+                >
+                    <v-icon>mdi-star-outline</v-icon>
+                </v-btn>
             </v-col>
         </v-row>
         <!--        диалог для редактирования карточки-->
@@ -56,12 +64,21 @@
                 @confirm="deleteCard(card.id)"
             />
         </v-dialog>
+        <!--        диалог для назначения исполнителя-->
+        <v-dialog
+                v-model="showOrderForm"
+                @cancel="showOrderForm = false"
+                max-width="400"
+        >
+           <order-form />
+        </v-dialog>
     </v-card>
 </template>
 
 <script>
 import UpdateCardDocument from "@/components/document/UpdateCardDocument";
 import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
+import OrderForm from "@/components/document/OrderForm";
 import {mapActions} from "vuex";
 
 export default {
@@ -71,11 +88,14 @@ export default {
         return {
             showCreateCard: false,
             showDialogDelete: false,
+            showOrderForm : false,
             changedCard : null,
+
         }
     },
+
     components: {
-        ConfirmDialog, UpdateCardDocument
+        ConfirmDialog, UpdateCardDocument, OrderForm
     },
     methods:{
         ...mapActions(['deleteCardFromServer']),
@@ -86,6 +106,9 @@ export default {
             this.changedCard = card
             this.showCreateCard = true
         }
+    },
+    created() {
+
     }
 }
 </script>

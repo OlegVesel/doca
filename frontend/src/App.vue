@@ -32,20 +32,54 @@
                 <router-view></router-view>
             </v-container>
         </v-main>
+        <v-snackbar
+                v-model="showNotification"
+                multi-line
+                app
+                right
+                top
+                color="success"
+                text
+                elevation="24"
+                :timeout=3000
+        >
+            {{currentSnackbar.text}}
+        </v-snackbar>
     </v-app>
 </template>
 
 <script>
 import ListNavigation from "@/components/navigation/ListNavigation";
+import {addNotification, connect} from "@/api/wsApi";
 export default {
     name: 'App',
 
     data() {
-        return {}
+        return {
+            showNotification:false,
+            currentSnackbar:{
+                text: '',
+            }
+        }
+    },
+    watch:{
+
+    },
+    methods:{
+        handleNotification(notification){
+            this.currentSnackbar.text = 'Вам назначен документ на исполнение к ' + notification.executeTo
+            this.showNotification = true
+        }
     },
     components:{
       ListNavigation
     },
+    created() {
+        connect()
+        addNotification(data => {
+            this.handleNotification(data)
+        })
+    }
 
 };
 </script>

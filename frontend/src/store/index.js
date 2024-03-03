@@ -49,6 +49,7 @@ export default new Vuex.Store({
 
         setAccount(state, payload) {
             state.account = payload
+            localStorage.setItem('login', payload.login)
         },
 
         clearAuth(state) {
