@@ -9,7 +9,7 @@ import java.util.UUID;
 public class OrderResponse {
     private UUID id;
     private String loginExecutor;
-    private UUID cardId;
+    private CardResponse card;
     private LocalDateTime executeTo;
     private Boolean executed;
 }

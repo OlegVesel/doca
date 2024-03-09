@@ -5,7 +5,9 @@ import lombok.Data;
 import ru.otdel.doca.model.entity.BaseEntity;
 import ru.otdel.doca.model.entity.dictionary.TypeDoc;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "documents")
@@ -30,5 +32,16 @@ public class Document extends BaseEntity {
     public void removeCard(Card card){
         this.cards.remove(card);
         card.getDocuments().remove(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "title='" + title + '\'' +
+                ", pathToDoc='" + pathToDoc + '\'' +
+                ", typeDoc=" + typeDoc +
+                ", data=" + Arrays.toString(data) +
+                ", cards=" + cards.size() +
+                '}';
     }
 }

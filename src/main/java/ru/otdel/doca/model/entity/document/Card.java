@@ -25,4 +25,15 @@ public class Card extends BaseEntity {
             joinColumns = {@JoinColumn(name = "card_id")},
             inverseJoinColumns = {@JoinColumn(name = "doc_id")})
     private List<Document> documents = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "title='" + title + '\'' +
+                ", userLogin='" + userLogin + '\'' +
+                ", comment='" + comment + '\'' +
+                ", executeTo=" + executeTo +
+                ", documents=" + documents.size() +
+                '}';
+    }
 }

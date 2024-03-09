@@ -15,7 +15,7 @@ public class Order extends BaseEntity {
     @JoinColumn(nullable = false)
     private UserEntity customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(nullable = false)
     private UserEntity executor;
 

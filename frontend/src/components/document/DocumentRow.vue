@@ -70,7 +70,9 @@
                 @cancel="showOrderForm = false"
                 max-width="400"
         >
-           <order-form />
+           <order-form
+                :card="card"
+           />
         </v-dialog>
     </v-card>
 </template>
@@ -107,9 +109,7 @@ export default {
             this.showCreateCard = true
         }
     },
-    created() {
 
-    }
 }
 </script>
 

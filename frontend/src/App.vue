@@ -33,6 +33,7 @@
             </v-container>
         </v-main>
         <v-snackbar
+                v-for="(notification, i) in notifications" :key="i"
                 v-model="showNotification"
                 multi-line
                 app
@@ -41,9 +42,20 @@
                 color="success"
                 text
                 elevation="24"
-                :timeout=3000
+                :timeout=-1
+                :style="{'margin-top':calcMargin(i)}"
         >
-            {{currentSnackbar.text}}
+            {{notification.text}}
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                        color="error"
+                        icon
+                        v-bind="attrs"
+                        @click="hide(i)"
+                >
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </template>
         </v-snackbar>
     </v-app>
 </template>
@@ -51,24 +63,38 @@
 <script>
 import ListNavigation from "@/components/navigation/ListNavigation";
 import {addNotification, connect} from "@/api/wsApi";
+import {mapMutations} from "vuex";
 export default {
     name: 'App',
 
     data() {
         return {
-            showNotification:false,
+            showNotification : true,
             currentSnackbar:{
                 text: '',
-            }
+            },
+            notifications:[],
         }
     },
     watch:{
 
     },
     methods:{
+        ...mapMutations(['addCardToList']),
         handleNotification(notification){
-            this.currentSnackbar.text = 'Вам назначен документ на исполнение к ' + notification.executeTo
+            let item = {
+                text : `Вам назначен документ ${notification.card.title} на исполнение к  ${notification.executeTo}`
+            }
+            // this.currentSnackbar.text = `Вам назначен документ ${notification.card.title} на исполнение к  ${notification.executeTo}`
+            this.notifications.push(item)
+            this.addCardToList(notification.card)
             this.showNotification = true
+        },
+        calcMargin(i) {
+            return (i*80) + 'px'
+        },
+        hide(i){
+            this.notifications.splice(i,1)
         }
     },
     components:{

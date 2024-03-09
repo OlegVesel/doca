@@ -6,24 +6,27 @@
 </template>
 
 <script>
-import { send} from '@/api/wsApi'
+import orderApi from "@/api/orderApi";
 
 export default {
     name: "OrderForm",
+    props: ['card'],
     data() {
         return {
             order: {
                 id: null,
                 loginExecutor: null,
                 cardId: null,
-                executeTo: '2024-03-03T19:54:58',
+                executeTo: '2024-03-09T23:35:00',
                 executed: false
             }
         }
     },
     methods: {
-        send() {
-            send(this.order)
+        async send() {
+            this.order.cardId = this.card.id
+            let response = await orderApi.assignExecutor(this.order)
+            console.log(response)
             this.$emit('cancel')
         },
     },

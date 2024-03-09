@@ -8,7 +8,7 @@ export function connect()  {
     console.log('start webs')
     console.log('user', userLogin)
     stompClient = new Client({
-        brokerURL : "ws://localhost:7777/ws",
+        brokerURL : "ws://192.168.0.106:7777/ws",
         onConnect : () => {
             if (userLogin == null)
                 userLogin = localStorage.getItem('login')
@@ -17,7 +17,6 @@ export function connect()  {
                     notifications.forEach(notification => notification(JSON.parse(result.body)))
                 }
             );
-
         },
         onStompError : frame => {
             console.log("error in stomp ",  frame)
