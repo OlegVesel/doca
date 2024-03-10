@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>
+        <v-card-title class="headline blue-grey">
             Создание карточки документа
         </v-card-title>
         <v-card-text>

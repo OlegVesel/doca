@@ -6,6 +6,7 @@ import authApi from "@/api/authApi";
 import cardApi from "@/api/cardApi";
 import documentApi from "@/api/documentApi";
 import dictionaryApi from "@/api/dictionaryApi";
+import userApi from "@/api/userApi";
 import axios from "axios";
 
 Vue.use(Vuex)
@@ -15,9 +16,12 @@ export default new Vuex.Store({
     plugins: [createPersistedState({paths: ['account']})],
     state: {
         isAuthenticated: localStorage.getItem('auth'),
-        account: {},
+        account: {
+            roles:[]
+        },
         cards:[],
         typeDocs:[],
+        users: [],
     },
     getters: {
         isAdmin(state) {
@@ -36,6 +40,9 @@ export default new Vuex.Store({
         },
         getTypeDocs(state){
             return state.typeDocs
+        },
+        getUsers(state){
+            return state.users
         }
     },
     mutations: {
@@ -55,6 +62,7 @@ export default new Vuex.Store({
         clearAuth(state) {
             localStorage.removeItem('auth')
             localStorage.removeItem('token')
+            localStorage.removeItem('login')
             state.isAuthenticated = localStorage.getItem('auth')
             state.account = {}
         },
@@ -81,6 +89,9 @@ export default new Vuex.Store({
         },
         setTypeDocs(state, typeDocs){
             state.typeDocs = typeDocs
+        },
+        setUsers(state, list){
+            state.users = list
         }
     },
     actions: {
@@ -165,6 +176,18 @@ export default new Vuex.Store({
             } catch (err){
                 if (err.request.status === 401)
                     await router.push("/login")
+            }
+        },
+        async getUsersAction({commit}){
+            try {
+                let { status, data } = await userApi.getAllUsers()
+                if (status === 200){
+                    commit('setUsers', data)
+                }
+            } catch (err){
+                if (err.request.status === 401){
+                    await router.push("login")
+                }
             }
         }
     },

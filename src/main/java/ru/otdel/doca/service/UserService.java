@@ -11,7 +11,8 @@ import ru.otdel.doca.model.entity.user.Role;
 import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.facade.UserFacade;
 import ru.otdel.doca.model.request.UserRequest;
-import ru.otdel.doca.model.response.UserResponse;
+import ru.otdel.doca.model.response.user.ShortUserResponse;
+import ru.otdel.doca.model.response.user.UserResponse;
 import ru.otdel.doca.repo.RoleRepo;
 import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.security.jwt.JwtGenerator;
@@ -86,5 +87,13 @@ public class UserService {
             return response;
         }
         return null;
+    }
+
+    public List<ShortUserResponse> getAllShort() {
+        return userRepo
+                .findAll()
+                .stream()
+                .map(userFacade::entityToShortResponse)
+                .toList();
     }
 }

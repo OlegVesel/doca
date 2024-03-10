@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage.vue'
 import LoginPage from "@/pages/LoginPage";
 import DocumentList from "@/pages/documents/DocumentList";
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,7 +27,7 @@ router.beforeEach((to, from, next) => {
     if (requiresAuth && !isAuthenticated) {
         next('/login')
     } else if (isLoginPage && isAuthenticated) {
-        router.push('/')
+        router.push('/').then()
     }
     next()
 })

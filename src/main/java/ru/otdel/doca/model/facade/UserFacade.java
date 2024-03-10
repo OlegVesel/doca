@@ -4,7 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.otdel.doca.model.entity.user.Role;
 import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.request.UserRequest;
-import ru.otdel.doca.model.response.UserResponse;
+import ru.otdel.doca.model.response.user.ShortUserResponse;
+import ru.otdel.doca.model.response.user.UserResponse;
 
 @Component
 public class UserFacade implements BaseFacade<UserEntity, UserRequest, UserResponse> {
@@ -25,6 +26,29 @@ public class UserFacade implements BaseFacade<UserEntity, UserRequest, UserRespo
                 .map(Role::getName)
                 .toList()
         );
+        return response;
+    }
+
+    public ShortUserResponse entityToShortResponse(UserEntity entity){
+        ShortUserResponse response = new ShortUserResponse();
+        response.setLogin(entity.getLogin());
+        StringBuilder builder = new StringBuilder();
+        if (entity.getLastName() != null && !entity.getLastName().isEmpty()){
+            response.setLastName(entity.getLastName());
+            builder.append(entity.getLastName()).append(" ");
+        }
+        if (entity.getFirstName() != null && !entity.getFirstName().isEmpty()){
+            response.setFirstName(entity.getFirstName());
+            builder.append(entity.getFirstName().charAt(0)).append(".");
+        }
+        if (entity.getPatronymic() != null && !entity.getPatronymic().isEmpty()){
+            response.setPatronymic(entity.getPatronymic());
+            builder.append(entity.getPatronymic().charAt(0)).append(".");
+        }
+        response.setFullName(
+                builder.toString()
+        );
+
         return response;
     }
 }

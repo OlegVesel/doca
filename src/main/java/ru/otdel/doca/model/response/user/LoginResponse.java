@@ -1,4 +1,4 @@
-package ru.otdel.doca.model.response;
+package ru.otdel.doca.model.response.user;
 
 import lombok.Data;
 

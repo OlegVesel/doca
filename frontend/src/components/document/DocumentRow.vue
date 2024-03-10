@@ -36,7 +36,7 @@
                         small
                         @click="showOrderForm = true"
                 >
-                    <v-icon>mdi-star-outline</v-icon>
+                    <v-icon>mdi-send</v-icon>
                 </v-btn>
             </v-col>
         </v-row>
@@ -67,11 +67,11 @@
         <!--        диалог для назначения исполнителя-->
         <v-dialog
                 v-model="showOrderForm"
-                @cancel="showOrderForm = false"
-                max-width="400"
+                max-width="600"
         >
            <order-form
                 :card="card"
+                @cancel="showOrderForm = false"
            />
         </v-dialog>
     </v-card>
@@ -92,7 +92,6 @@ export default {
             showDialogDelete: false,
             showOrderForm : false,
             changedCard : null,
-
         }
     },
 

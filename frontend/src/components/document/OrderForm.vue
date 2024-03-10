@@ -1,12 +1,54 @@
 <template>
     <v-card>
-        <v-text-field v-model="order.loginExecutor" label="login"></v-text-field>
-        <v-btn @click="send">send</v-btn>
+        <v-card-title class="headline blue-grey">
+            Назначение исполнителя
+        </v-card-title>
+        <v-card-text>
+            <v-row class="mt-2">
+                <v-autocomplete
+                        :items="getUsers"
+                        item-text="fullName"
+                        item-value="login"
+                        v-model="order.loginExecutor"
+                        label="Выберите исполнителя"
+                ></v-autocomplete>
+            </v-row>
+            <v-row class="align-end">
+                <v-col class="pt-0">
+                    <date-picker
+                            label="Исполнить:"
+                            :current-date="order.dateExecuteTo"
+                            @get-date="setDate"/>
+                </v-col>
+                <v-col class="pt-0">
+                    <v-text-field
+                            label="к:"
+                            type="time"
+                            v-model="order.timeExecuteTo"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn
+                    color="success"
+                    :disabled=!isEnabled
+                    @click="send">
+                Назначить
+            </v-btn>
+            <v-btn
+                    color="error"
+                    @click="$emit('cancel')">
+                Отмена
+            </v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
 <script>
 import orderApi from "@/api/orderApi";
+import {mapActions, mapGetters} from "vuex";
+import DatePicker from "@/components/dialogs/DatePicker";
 
 export default {
     name: "OrderForm",
@@ -17,19 +59,42 @@ export default {
                 id: null,
                 loginExecutor: null,
                 cardId: null,
-                executeTo: '2024-03-09T23:35:00',
+                executeTo: '',
+                timeExecuteTo: '12:00',
+                dateExecuteTo: null,
                 executed: false
             }
         }
     },
+    components: {
+        DatePicker
+    },
+    computed: {
+        ...mapGetters(['getUsers']),
+        isEnabled(){
+            return this.order.timeExecuteTo !== null &&
+                    this.order.timeExecuteTo !== '' &&
+                    this.order.dateExecuteTo !== null &&
+                    this.order.loginExecutor !== null
+        }
+    },
     methods: {
+        ...mapActions(['getUsersAction']),
         async send() {
             this.order.cardId = this.card.id
+            this.order.executeTo = `${this.order.dateExecuteTo}T${this.order.timeExecuteTo}`
             let response = await orderApi.assignExecutor(this.order)
             console.log(response)
             this.$emit('cancel')
         },
+        setDate(date) {
+            this.order.dateExecuteTo = date
+        }
     },
+    beforeMount() {
+        if (!this.getUsers.length > 0)
+            this.getUsersAction()
+    }
 }
 </script>
 
