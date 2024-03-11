@@ -19,9 +19,13 @@ public class Order extends BaseEntity {
     @JoinColumn(nullable = false)
     private UserEntity executor;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(nullable = false)
-    private Card card;
+    private Card cardExecutor;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Card cardCustomer;
 
     @Column
     private LocalDateTime executeTo;

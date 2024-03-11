@@ -8,16 +8,14 @@ import ru.otdel.doca.model.entity.document.Order;
 import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.facade.BaseFacade;
 import ru.otdel.doca.model.request.document.OrderRequest;
-import ru.otdel.doca.model.response.document.CardResponse;
 import ru.otdel.doca.model.response.document.OrderResponse;
+import ru.otdel.doca.model.response.document.ShortOrderResponse;
 import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.repo.document.CardRepo;
 import ru.otdel.doca.repo.document.OrderRepo;
 import ru.otdel.doca.service.documents.CardService;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +24,7 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
     private final CardService cardService;
     private final OrderRepo orderRepo;
     private final CardFacade cardFacade;
+    private final CardRepo cardRepo;
     @Override
     public Order requestToEntity(OrderRequest request) {
         Order entity;
@@ -46,7 +45,10 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
         }
         if (request.getCardId() != null){
             Card newCard = cardService.copyCardById(request.getCardId(), request.getLoginExecutor());
-            entity.setCard(newCard);
+            entity.setCardExecutor(newCard);
+            entity.setCardCustomer(
+                    cardRepo.findById(request.getCardId()).orElse(null)
+            );
         }
         String customerLogin = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> customerByLogin = userRepo.findByLogin(customerLogin);
@@ -61,8 +63,11 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
         response.setLoginExecutor(
                 entity.getExecutor().getLogin()
         );
-        response.setCard(
-                cardFacade.entityToResponse(entity.getCard())
+        response.setCardExecutor(
+                cardFacade.entityToResponse(entity.getCardExecutor())
+        );
+        response.setCardCustomer(
+                cardFacade.entityToResponse(entity.getCardCustomer())
         );
         response.setExecuteTo(
                 entity.getExecuteTo()

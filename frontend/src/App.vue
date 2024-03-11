@@ -83,11 +83,11 @@ export default {
         ...mapMutations(['addCardToList']),
         handleNotification(notification){
             let item = {
-                text : `Вам назначен документ ${notification.card.title} на исполнение к  ${notification.executeTo}`
+                text : `Вам назначен документ ${notification.cardExecutor.title} на исполнение к  ${notification.executeTo}`
             }
             // this.currentSnackbar.text = `Вам назначен документ ${notification.card.title} на исполнение к  ${notification.executeTo}`
             this.notifications.push(item)
-            this.addCardToList(notification.card)
+            this.addCardToList(notification.cardExecutor)
             this.showNotification = true
         },
         calcMargin(i) {

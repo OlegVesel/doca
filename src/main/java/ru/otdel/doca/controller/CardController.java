@@ -35,6 +35,14 @@ public class CardController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CardResponse> getCardById(@PathVariable UUID id){
+        CardResponse response = cardService.getCardById(id);
+        if (response != null)
+            return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
     @PutMapping
     public ResponseEntity<CardResponse> update(@ModelAttribute CardRequest request){
         CardResponse response = cardService.saveCard(request);

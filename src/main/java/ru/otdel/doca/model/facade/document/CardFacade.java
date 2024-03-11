@@ -4,20 +4,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.otdel.doca.model.entity.document.Card;
+import ru.otdel.doca.model.entity.document.Order;
 import ru.otdel.doca.model.facade.BaseFacade;
 import ru.otdel.doca.model.facade.UserFacade;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
+import ru.otdel.doca.model.response.document.ShortOrderResponse;
 import ru.otdel.doca.repo.UserRepo;
 import ru.otdel.doca.repo.document.CardRepo;
+import ru.otdel.doca.repo.document.OrderRepo;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
     private final CardRepo cardRepo;
-    private final UserRepo userRepo;
-    private final UserFacade userFacade;
     private final DocumentFacade documentFacade;
+    private final OrderRepo orderRepo;
 
     @Override
     public Card requestToEntity(CardRequest request) {
@@ -55,6 +60,30 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
                             .map(documentFacade::entityToResponse)
                             .toList()
             );
+
+        List<Order> customerCards = orderRepo.findByCardCustomer_Id(entity.getId());
+        if (customerCards.size() > 0) {
+            ShortOrderResponse shortOrderResponse = orderToShortOrderResponse(customerCards.get(0));
+            List<String> loginExecutors = customerCards.stream().map(order -> order.getExecutor().getLogin()).toList();
+            shortOrderResponse.setLoginExecutors(loginExecutors);
+            response.setCustomerOrder(shortOrderResponse);
+        }
+
+        orderRepo.findByCardExecutor_Id(entity.getId()).ifPresent(order -> {
+            ShortOrderResponse shortOrderResponse = orderToShortOrderResponse(order);
+            response.setExecutorOrder(shortOrderResponse);
+        });
+
+
         return response;
+    }
+
+    private ShortOrderResponse orderToShortOrderResponse(Order order) {
+        ShortOrderResponse shortOrderResponse = new ShortOrderResponse();
+        shortOrderResponse.setId(order.getId());
+        shortOrderResponse.setLoginCustomer(order.getCustomer().getLogin());
+        shortOrderResponse.setExecuted(order.getExecuted());
+        shortOrderResponse.setExecuteTo(order.getExecuteTo());
+        return shortOrderResponse;
     }
 }

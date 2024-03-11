@@ -66,4 +66,11 @@ public class CardService {
         newCard.setDocuments(newDocs);
         return cardRepo.save(newCard);
     }
+
+    public CardResponse getCardById(UUID id) {
+        Card card = cardRepo.findById(id).orElse(null);
+        if (card != null)
+            return cardFacade.entityToResponse(card);
+        return null;
+    }
 }

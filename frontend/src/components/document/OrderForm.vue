@@ -79,12 +79,14 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getUsersAction']),
+        ...mapActions(['getUsersAction', 'getCardById']),
         async send() {
             this.order.cardId = this.card.id
             this.order.executeTo = `${this.order.dateExecuteTo}T${this.order.timeExecuteTo}`
             let response = await orderApi.assignExecutor(this.order)
-            console.log(response)
+            if (response.status === 200){
+                await this.getCardById(this.card.id)
+            }
             this.$emit('cancel')
         },
         setDate(date) {
