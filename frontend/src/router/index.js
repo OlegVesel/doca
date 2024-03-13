@@ -18,18 +18,12 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    const requiresAuth = !to.matched.some((record) => record.meta.nonRequiresAuth)
-    const isLoginPage = to.matched.some((record) => record.meta.loginPage)
+router.beforeEach(async (to, from, next) => {
     const isAuthenticated = localStorage.getItem('auth')
-
-
-    if (requiresAuth && !isAuthenticated) {
-        next('/login')
-    } else if (isLoginPage && isAuthenticated) {
-        router.push('/').then()
+    if (to.name !== 'login' && !isAuthenticated) {
+        next({ name: 'login' })
     }
-    next()
+    else next()
 })
 
 export default router
