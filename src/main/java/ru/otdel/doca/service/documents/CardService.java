@@ -24,33 +24,37 @@ public class CardService {
     private final DocumentService documentService;
 
     @Transactional
-    public CardResponse saveCard(CardRequest request){
+    public CardResponse saveCard(CardRequest request) {
         Card card = cardFacade.requestToEntity(request);
         if (request.getMultipartFiles() != null && !request.getMultipartFiles().isEmpty()) {
-          card.getDocuments().addAll(documentService.multipartToDocument(request.getMultipartFiles(), request.getTypeDocId()));
+            card.getDocuments().addAll(documentService.multipartToDocument(request.getMultipartFiles(), request.getTypeDocId()));
         }
         Card save = cardRepo.save(card);
         return cardFacade.entityToResponse(save);
     }
 
-    public List<CardResponse> getAllByUser() {
+    public List<CardResponse> getAllByUser(Boolean isDeleted) {
         String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        return cardRepo.findByUserLoginAndIsDeleted(userLogin, false)
+        return cardRepo.findByUserLoginAndIsDeleted(userLogin, isDeleted)
                 .stream()
                 .map(cardFacade::entityToResponse)
                 .toList();
     }
 
-    public Boolean softDeleteCardById(UUID id) {
+    public Boolean deleteCardById(UUID id) {
         Card card = cardRepo.findById(id).orElse(null);
         if (card == null)
             return false;
-        card.setIsDeleted(true);
-        cardRepo.save(card);
+        if (!card.getIsDeleted()) {
+            card.setIsDeleted(true);
+            cardRepo.save(card);
+        } else {
+            cardRepo.delete(card);
+        }
         return true;
     }
 
-    public Card copyCardById(UUID cardId, String newUserLogin){
+    public Card copyCardById(UUID cardId, String newUserLogin) {
         Card oldCard = cardRepo.findById(cardId).orElse(null);
         if (oldCard == null)
             return null;

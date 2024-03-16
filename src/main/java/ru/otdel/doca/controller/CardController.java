@@ -27,7 +27,17 @@ public class CardController {
 
     @GetMapping
     public ResponseEntity<List<CardResponse>> getAll(){
-        List<CardResponse> response = cardService.getAllByUser();
+        List<CardResponse> response = cardService.getAllByUser(false);
+        if (response != null && !response.isEmpty())
+            return ResponseEntity.ok(response);
+        else if(response != null)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/deleted")
+    public ResponseEntity<List<CardResponse>> getAllDeleted(){
+        List<CardResponse> response = cardService.getAllByUser(true);
         if (response != null && !response.isEmpty())
             return ResponseEntity.ok(response);
         else if(response != null)
@@ -53,7 +63,7 @@ public class CardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> softDelete(@PathVariable UUID id){
-        Boolean response = cardService.softDeleteCardById(id);
+        Boolean response = cardService.deleteCardById(id);
         if (response)
             return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

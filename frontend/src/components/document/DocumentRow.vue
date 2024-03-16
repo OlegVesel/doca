@@ -42,7 +42,7 @@
                             mdi-information-outline
                         </v-icon>
                     </template>
-                    <span>Над карточкой работают: {{card.customerOrder.loginExecutors.length}} ({{card.customerOrder.loginExecutors.join(', ')}}). </span>
+                    <span>Над карточкой работают: {{card.customerOrder.loginExecutors.length}} [{{card.customerOrder.loginExecutors.join(', ')}}]. </span>
                     <span> Исполнить к {{card.customerOrder.executeTo}}</span>
                 </v-tooltip>
             </v-col>
@@ -59,6 +59,7 @@
                         color="error"
                         icon
                         small
+                        :disabled="isNoDelete"
                         @click="showDialogDelete = true"
                 >
                     <v-icon>mdi-delete-outline</v-icon>
@@ -130,6 +131,11 @@ export default {
 
     components: {
         ConfirmDialog, UpdateCardDocument, OrderForm
+    },
+    computed : {
+        isNoDelete(){
+            return this.card.executorOrder !== null || this.card.customerOrder !== null
+        }
     },
     methods: {
         ...mapActions(['deleteCardFromServer']),

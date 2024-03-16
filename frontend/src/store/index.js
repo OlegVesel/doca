@@ -123,6 +123,15 @@ export default new Vuex.Store({
                     await router.push('login')
             }
         },
+        async getDeletedCardsFromServer({commit}) {
+            try {
+                let response = await cardApi.getDeletedCards()
+                commit('setCards', response.data)
+            } catch (err){
+                if (err.request.status === 401)
+                    await router.push('login')
+            }
+        },
         async getCardById({commit}, id){
             try {
                 let response = await cardApi.getCardById(id)

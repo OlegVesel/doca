@@ -21,8 +21,16 @@
                         @cancel="showCreateCard = false"
                 />
             </v-dialog>
+            <v-spacer></v-spacer>
+
+            <v-switch
+                    append-icon="mdi-delete"
+                    color="error"
+                    v-model="isShowDeleted"
+            >
+            </v-switch>
         </v-row>
-        <v-row v-for="card in getCards"
+        <v-row  v-for="card in getCards"
                :key="card.id">
             <v-col class="px-0 py-1">
                 <document-row
@@ -44,6 +52,15 @@ export default {
     data() {
         return {
             showCreateCard: false,
+            isShowDeleted: false,
+        }
+    },
+    watch:{
+        isShowDeleted(newVal){
+            if (newVal)
+                this.getDeletedCardsFromServer()
+            else
+                this.getCardsFromServer()
         }
     },
     components: {
@@ -53,7 +70,8 @@ export default {
         ...mapGetters(['getCards'])
     },
     methods: {
-        ...mapActions(['getCardsFromServer'])
+        ...mapActions(['getCardsFromServer', 'getDeletedCardsFromServer']),
+
     },
     beforeMount() {
         this.getCardsFromServer()

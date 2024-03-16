@@ -5,6 +5,8 @@ export default {
 
     getCards : () => axios.get("/api/cards"),
 
+    getDeletedCards : () => axios.get("/api/cards/deleted"),
+
     getCardById : id => axios.get(`/api/cards/${id}`),
 
     updateCard : card => axios.put("/api/cards", card, {
