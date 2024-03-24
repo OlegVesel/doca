@@ -27,7 +27,8 @@
                             mdi-alert-outline
                         </v-icon>
                     </template>
-                    <span>Карточка назначена {{card.executorOrder.loginCustomer}} к {{card.executorOrder.executeTo}}</span>
+                    <p class="tooltip__text">Карточка назначена {{ card.executorOrder.loginCustomer }} к {{ card.customerOrder.executeTo.split('T')[1] }}
+                        {{ card.customerOrder.executeTo.split('T')[0] }}</p>
                 </v-tooltip>
                 <v-tooltip
                         v-if="card.customerOrder"
@@ -42,11 +43,23 @@
                             mdi-information-outline
                         </v-icon>
                     </template>
-                    <span>Над карточкой работают: {{card.customerOrder.loginExecutors.length}} [{{card.customerOrder.loginExecutors.join(', ')}}]. </span>
-                    <span> Исполнить к {{card.customerOrder.executeTo}}</span>
+                    <p class="tooltip__text">Над карточкой работают: {{ card.customerOrder.loginExecutors.length }}
+                        [{{ card.customerOrder.loginExecutors.join(', ') }}]. </p>
+                    <p class="tooltip__text">Исполнить к {{ card.customerOrder.executeTo.split('T')[1] }}
+                        {{ card.customerOrder.executeTo.split('T')[0] }} </p>
+                    <p class="tooltip__text">Осталось: {{ getTimeToExecute }}</p>
                 </v-tooltip>
             </v-col>
             <v-col cols="2" align="end">
+                <v-btn
+                        v-if="card.executorOrder"
+                        color="success"
+                        icon
+                        small
+                        @click.stop="showExecuteCard = true"
+                >
+                    <v-icon>mdi-check-bold</v-icon>
+                </v-btn>
                 <v-btn
                         color="primary"
                         icon
@@ -108,6 +121,18 @@
                     @cancel="showOrderForm = false"
             />
         </v-dialog>
+        <!--        диалог для подтверждения выполнения карточки -->
+        <v-dialog
+                v-model="showExecuteCard"
+                max-width="400"
+        >
+            <confirm-dialog
+                    :title-text="`Выполнение карточки`"
+                    :dialog-text="`Карточка ${card.title} выполнена?`"
+                    :color="`#43A047`"
+                    @cancel="showExecuteCard = false"
+            />
+        </v-dialog>
     </v-card>
 </template>
 
@@ -125,6 +150,7 @@ export default {
             showCreateCard: false,
             showDialogDelete: false,
             showOrderForm: false,
+            showExecuteCard: false,
             changedCard: null,
         }
     },
@@ -132,9 +158,26 @@ export default {
     components: {
         ConfirmDialog, UpdateCardDocument, OrderForm
     },
-    computed : {
-        isNoDelete(){
+    computed: {
+        isNoDelete() {
             return this.card.executorOrder !== null || this.card.customerOrder !== null
+        },
+        getTimeToExecute() {
+            if (this.card.customerOrder !== null) {
+                let milliseconds = new Date(new Date(this.card.customerOrder.executeTo) - Date.now());
+                let days = Math.floor((milliseconds) / (1000 * 60 * 60 * 24));
+                let hours = Math.floor((milliseconds) / (1000 * 60 * 60));
+                let minutes = Math.floor((milliseconds) / (1000 * 60));
+
+                if (days >= 1)
+                    return days + ' дня(ей)'
+                else if (hours >= 1)
+                    return hours + ' часа(ов)'
+                else if (minutes >= 1)
+                    return minutes + ' минут(а)'
+                return ' Просрочена!'
+            }
+            return ''
         }
     },
     methods: {
@@ -152,5 +195,7 @@ export default {
 </script>
 
 <style scoped>
-
+.tooltip__text {
+    margin: 0;
+}
 </style>

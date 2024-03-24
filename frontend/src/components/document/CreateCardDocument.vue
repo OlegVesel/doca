@@ -8,9 +8,9 @@
                     label="Имя карточки"
                     v-model="card.title"
             />
-            <date-picker
-                :label="`Исполнить к:`"
-                @get-date="setDate"/>
+<!--            <date-picker-->
+<!--                :label="`Исполнить к:`"-->
+<!--                @get-date="setDate"/>-->
             <v-textarea
                     rows="2"
                     label="Комментарий"
@@ -38,7 +38,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import cardApi from "@/api/cardApi";
-import DatePicker from "@/components/dialogs/DatePicker";
+// import DatePicker from "@/components/dialogs/DatePicker";
 export default {
     name: "CreateCardDocument",
 
@@ -53,7 +53,7 @@ export default {
             },
         }
     },
-    components:{ DatePicker },
+    components:{  },
     methods: {
         ...mapMutations(['addCardToList',]),
         async save() {
