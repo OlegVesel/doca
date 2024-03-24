@@ -27,6 +27,9 @@
                             v-model="order.timeExecuteTo"
                     ></v-text-field>
                 </v-col>
+                <v-col>
+                    <v-switch v-model="order.needReport" label="Предоставить отчет"></v-switch>
+                </v-col>
             </v-row>
         </v-card-text>
         <v-card-actions>
@@ -62,7 +65,8 @@ export default {
                 executeTo: '',
                 timeExecuteTo: '12:00',
                 dateExecuteTo: null,
-                executed: false
+                executed: false,
+                needReport : false,
             }
         }
     },

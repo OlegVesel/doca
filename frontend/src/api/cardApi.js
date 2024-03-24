@@ -3,6 +3,12 @@ import axios from "axios";
 export default {
     saveCard : card => axios.post("/api/cards", card),
 
+    executeCard : card => axios.post("/api/cards/execute", card, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }),
+
     getCards : () => axios.get("/api/cards"),
 
     getDeletedCards : () => axios.get("/api/cards/deleted"),

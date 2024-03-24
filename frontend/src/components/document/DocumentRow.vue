@@ -27,8 +27,8 @@
                             mdi-alert-outline
                         </v-icon>
                     </template>
-                    <p class="tooltip__text">Карточка назначена {{ card.executorOrder.loginCustomer }} к {{ card.customerOrder.executeTo.split('T')[1] }}
-                        {{ card.customerOrder.executeTo.split('T')[0] }}</p>
+                    <p class="tooltip__text">Карточка назначена {{ card.executorOrder.loginCustomer }} к {{ card.executorOrder.executeTo.split('T')[1] }}
+                        {{ card.executorOrder.executeTo.split('T')[0] }}</p>
                 </v-tooltip>
                 <v-tooltip
                         v-if="card.customerOrder"
@@ -114,7 +114,7 @@
         <!--        диалог для назначения исполнителя-->
         <v-dialog
                 v-model="showOrderForm"
-                max-width="600"
+                max-width="800"
         >
             <order-form
                     :card="card"
@@ -124,12 +124,13 @@
         <!--        диалог для подтверждения выполнения карточки -->
         <v-dialog
                 v-model="showExecuteCard"
-                max-width="400"
+                max-width="600"
         >
-            <confirm-dialog
+            <card-execute-dialog
                     :title-text="`Выполнение карточки`"
                     :dialog-text="`Карточка ${card.title} выполнена?`"
                     :color="`#43A047`"
+                    :card="card"
                     @cancel="showExecuteCard = false"
             />
         </v-dialog>
@@ -139,6 +140,7 @@
 <script>
 import UpdateCardDocument from "@/components/document/UpdateCardDocument";
 import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
+import CardExecuteDialog from "@/components/dialogs/CardExecuteDialog";
 import OrderForm from "@/components/document/OrderForm";
 import {mapActions} from "vuex";
 
@@ -156,7 +158,7 @@ export default {
     },
 
     components: {
-        ConfirmDialog, UpdateCardDocument, OrderForm
+        ConfirmDialog, UpdateCardDocument, OrderForm, CardExecuteDialog
     },
     computed: {
         isNoDelete() {

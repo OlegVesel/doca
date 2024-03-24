@@ -31,6 +31,9 @@ public class Order extends BaseEntity {
     private LocalDateTime executeTo;
 
     @Column
-    private Boolean executed;
+    private Boolean executed = false;
+
+    @Column
+    private Boolean needReport = false;
 
 }

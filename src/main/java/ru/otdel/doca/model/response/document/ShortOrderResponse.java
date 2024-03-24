@@ -13,4 +13,5 @@ public class ShortOrderResponse {
     private String loginCustomer; //заказчик всегда один
     private LocalDateTime executeTo;
     private Boolean executed;
+    private Boolean needReport;
 }

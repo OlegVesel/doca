@@ -13,4 +13,5 @@ public class OrderResponse {
     private CardResponse cardCustomer;
     private LocalDateTime executeTo;
     private Boolean executed;
+    private Boolean needReport;
 }

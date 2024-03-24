@@ -25,6 +25,7 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
     private final OrderRepo orderRepo;
     private final CardFacade cardFacade;
     private final CardRepo cardRepo;
+
     @Override
     public Order requestToEntity(OrderRequest request) {
         Order entity;
@@ -39,11 +40,11 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
         if (request.getExecuteTo() != null)
             entity.setExecuteTo(request.getExecuteTo());
 
-        if (request.getLoginExecutor() != null){
+        if (request.getLoginExecutor() != null) {
             Optional<UserEntity> byLogin = userRepo.findByLogin(request.getLoginExecutor());
             byLogin.ifPresent(entity::setExecutor);
         }
-        if (request.getCardId() != null){
+        if (request.getCardId() != null) {
             Card newCard = cardService.copyCardById(request.getCardId(), request.getLoginExecutor());
             entity.setCardExecutor(newCard);
             entity.setCardCustomer(
@@ -53,6 +54,7 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
         String customerLogin = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> customerByLogin = userRepo.findByLogin(customerLogin);
         customerByLogin.ifPresent(entity::setCustomer);
+        entity.setNeedReport(request.getNeedReport());
         return entity;
     }
 
@@ -73,7 +75,7 @@ public class OrderFacade implements BaseFacade<Order, OrderRequest, OrderRespons
                 entity.getExecuteTo()
         );
         response.setExecuted(entity.getExecuted());
-
+        response.setNeedReport(entity.getNeedReport());
         return response;
     }
 }

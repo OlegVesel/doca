@@ -25,6 +25,14 @@ public class CardController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PostMapping("/execute")
+    public ResponseEntity<CardResponse> execute(@ModelAttribute CardRequest request){
+        CardResponse response = cardService.executeCard(request);
+        if (response != null)
+            return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<CardResponse>> getAll(){
         List<CardResponse> response = cardService.getAllByUser(false);

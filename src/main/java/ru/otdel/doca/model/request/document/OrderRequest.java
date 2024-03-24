@@ -12,4 +12,5 @@ public class OrderRequest {
     private UUID cardId;
     private LocalDateTime executeTo;
     private Boolean executed;
+    private Boolean needReport;
 }
