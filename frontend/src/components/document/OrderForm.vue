@@ -35,9 +35,9 @@
         <v-card-actions>
             <v-btn
                     color="success"
-                    :disabled=!isEnabled
+                    :disabled="isDisabled"
                     @click="send">
-                Назначить
+                передать
             </v-btn>
             <v-btn
                     color="error"
@@ -62,7 +62,7 @@ export default {
                 id: null,
                 loginExecutor: null,
                 cardId: null,
-                executeTo: '',
+                executeTo: null,
                 timeExecuteTo: '12:00',
                 dateExecuteTo: null,
                 executed: false,
@@ -75,18 +75,16 @@ export default {
     },
     computed: {
         ...mapGetters(['getUsers']),
-        isEnabled(){
-            return this.order.timeExecuteTo !== null &&
-                    this.order.timeExecuteTo !== '' &&
-                    this.order.dateExecuteTo !== null &&
-                    this.order.loginExecutor !== null
+        isDisabled(){
+            return this.order.loginExecutor == null
         }
     },
     methods: {
         ...mapActions(['getUsersAction', 'getCardById']),
         async send() {
             this.order.cardId = this.card.id
-            this.order.executeTo = `${this.order.dateExecuteTo}T${this.order.timeExecuteTo}`
+            if (this.order.executeTo != null)
+                this.order.executeTo = `${this.order.dateExecuteTo}T${this.order.timeExecuteTo}`
             let response = await orderApi.assignExecutor(this.order)
             if (response.status === 200){
                 await this.getCardById(this.card.id)

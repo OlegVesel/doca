@@ -24,7 +24,7 @@
                 absolute
                 v-if="$route.fullPath !== '/login'"
         >
-           <list-navigation/>
+            <list-navigation/>
         </v-navigation-drawer>
 
         <v-main class="px-0">
@@ -32,76 +32,83 @@
                 <router-view></router-view>
             </v-container>
         </v-main>
-        <v-snackbar
-                v-for="(notification, i) in notifications" :key="i"
-                v-model="showNotification"
-                multi-line
-                app
-                right
-                top
-                color="success"
-                text
-                elevation="24"
-                :timeout=-1
-                :style="{'margin-top':calcMargin(i)}"
-        >
-            {{notification.text}}
-            <template v-slot:action="{ attrs }">
-                <v-btn
-                        color="error"
-                        icon
-                        v-bind="attrs"
-                        @click="hide(i)"
-                >
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-            </template>
-        </v-snackbar>
+        <template v-if="showNotification">
+            <notification-snackbar
+                    v-for="(notification, i) in notifications" :key="i"
+                    :color=notification.color
+                    :text=notification.text
+                    :icon=notification.icon
+                    :timeout=notification.timeout
+                    :index="i"
+                    :style="{'margin-top':calcMargin(i)}"
+                    @hide="hide"
+            >
+            </notification-snackbar>
+        </template>
     </v-app>
 </template>
 
 <script>
 import ListNavigation from "@/components/navigation/ListNavigation";
-import {addNotification, connect} from "@/api/wsApi";
-import {mapMutations} from "vuex";
+import NotificationSnackbar from "@/features/NotificationSnackbar";
+import {addNotification} from "@/api/wsApi";
+import {mapActions, mapMutations} from "vuex";
+
 export default {
     name: 'App',
 
     data() {
         return {
-            showNotification : true,
-            currentSnackbar:{
+            showNotification: true,
+            currentSnackbar: {
                 text: '',
             },
-            notifications:[],
+            notifications: [],
         }
     },
-    watch:{
-
-    },
-    methods:{
+    watch: {},
+    methods: {
         ...mapMutations(['addCardToList']),
-        handleNotification(notification){
-            let item = {
-                text : `Вам назначен документ ${notification.cardExecutor.title} на исполнение к  ${notification.executeTo}`
+        ...mapActions(['getCardById']),
+        handleNotification(notification) {
+            let item = {}
+            switch (notification.type) {
+                case 'ORDER' :{
+                    item = {
+                        text: `Вам передан документ ${notification.body.cardExecutor.title} ${notification.body.executeTo !== null ? ' на исполнение к ' + notification.body.executeTo : ''}`,
+                        color: 'primary',
+                        icon: 'mdi-information-outline',
+                        timeout : -1
+                    }
+                    this.addCardToList(notification.body.cardExecutor)
+                    break
+                }
+                case 'EXECUTE' :{
+                    item = {
+                        text: `${notification.body.userLogin} выполнил карточку ${notification.body.title}. ${notification.body.executorOrder.needReport !== null
+                                ? ` Файл отчета находится в документах карточки` : '' }`,
+                        color: 'success',
+                        icon: 'mdi-check-bold',
+                        timeout : -1
+                    }
+                    this.getCardById(notification.body.executorOrder?.cardCustomerId)
+                    break
+                }
             }
-            // this.currentSnackbar.text = `Вам назначен документ ${notification.card.title} на исполнение к  ${notification.executeTo}`
             this.notifications.push(item)
-            this.addCardToList(notification.cardExecutor)
             this.showNotification = true
         },
         calcMargin(i) {
-            return (i*80) + 'px'
+            return (i * 80) + 'px'
         },
-        hide(i){
-            this.notifications.splice(i,1)
+        hide(i) {
+            this.notifications.splice(i, 1)
         }
     },
-    components:{
-      ListNavigation
+    components: {
+        ListNavigation, NotificationSnackbar
     },
     created() {
-        connect()
         addNotification(data => {
             this.handleNotification(data)
         })

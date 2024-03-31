@@ -15,7 +15,7 @@
             </v-col>
             <v-col cols="2">
                 <v-tooltip
-                        v-if="card.executorOrder"
+                        v-if="card.executorOrder !== null && card.executorOrder.executeTo !== null"
                         top
                 >
                     <template v-slot:activator="{ on, attrs }">
@@ -31,7 +31,7 @@
                         {{ card.executorOrder.executeTo.split('T')[0] }}</p>
                 </v-tooltip>
                 <v-tooltip
-                        v-if="card.customerOrder"
+                        v-if="card.customerOrder !== null && card.customerOrder.executeTo !== null"
                         top
                 >
                     <template v-slot:activator="{ on, attrs }">
@@ -105,7 +105,7 @@
         >
             <confirm-dialog
                     :title-text="`Удаление карточки`"
-                    :dialog-text="`Вы точно хотите удалить карточку ${card.title}?`"
+                    :dialog-text="`Вы точно хотите удалить карточку ${card.title}? Все назначения связанные с этой карточкой также будут удалены` "
                     :color="`#E57373`"
                     @cancel="showDialogDelete = false"
                     @confirm="deleteCard(card.id)"
@@ -162,10 +162,10 @@ export default {
     },
     computed: {
         isNoDelete() {
-            return this.card.executorOrder !== null || this.card.customerOrder !== null
+            return false //this.card.executorOrder !== null || this.card.customerOrder !== null
         },
         getTimeToExecute() {
-            if (this.card.customerOrder !== null) {
+            if (this.card.customerOrder !== null && this.card.customerOrder.executeTo !== null) {
                 let milliseconds = new Date(new Date(this.card.customerOrder.executeTo) - Date.now());
                 let days = Math.floor((milliseconds) / (1000 * 60 * 60 * 24));
                 let hours = Math.floor((milliseconds) / (1000 * 60 * 60));

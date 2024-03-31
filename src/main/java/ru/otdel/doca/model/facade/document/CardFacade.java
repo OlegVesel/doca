@@ -85,6 +85,7 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
         ShortOrderResponse shortOrderResponse = new ShortOrderResponse();
         shortOrderResponse.setId(order.getId());
         shortOrderResponse.setLoginCustomer(order.getCustomer().getLogin());
+        shortOrderResponse.setCardCustomerId(order.getCardCustomer().getId());
         shortOrderResponse.setExecuted(order.getExecuted());
         shortOrderResponse.setExecuteTo(order.getExecuteTo());
         shortOrderResponse.setNeedReport(order.getNeedReport());

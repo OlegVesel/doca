@@ -10,6 +10,7 @@ import java.util.UUID;
 public class ShortOrderResponse {
     private UUID id;
     private List<String> loginExecutors; //исполнителей может быть много
+    private UUID cardCustomerId; //для указания конкретной карточки заказчика
     private String loginCustomer; //заказчик всегда один
     private LocalDateTime executeTo;
     private Boolean executed;

@@ -6,16 +6,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otdel.doca.model.request.document.CardRequest;
 import ru.otdel.doca.model.response.document.CardResponse;
+import ru.otdel.doca.model.response.document.OrderResponse;
+import ru.otdel.doca.model.response.notification.NotificationResponse;
+import ru.otdel.doca.model.response.notification.TypeNotification;
 import ru.otdel.doca.service.documents.CardService;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
+    private final WSSender wsSender;
 
     @PostMapping
     public ResponseEntity<CardResponse> save(@RequestBody CardRequest request){
@@ -28,8 +33,15 @@ public class CardController {
     @PostMapping("/execute")
     public ResponseEntity<CardResponse> execute(@ModelAttribute CardRequest request){
         CardResponse response = cardService.executeCard(request);
-        if (response != null)
+        if (response != null){
+            String loginCustomer = response.getExecutorOrder().getLoginCustomer();
+            BiConsumer<String, Object> sender = wsSender.getSender();
+            NotificationResponse notificationResponse = new NotificationResponse();
+            notificationResponse.setType(TypeNotification.EXECUTE);
+            notificationResponse.setBody(response);
+            sender.accept(loginCustomer, notificationResponse);
             return ResponseEntity.ok(response);
+        }
         return ResponseEntity.badRequest().build();
     }
 

@@ -7,6 +7,7 @@ import cardApi from "@/api/cardApi";
 import documentApi from "@/api/documentApi";
 import dictionaryApi from "@/api/dictionaryApi";
 import userApi from "@/api/userApi";
+import { connect } from "@/api/wsApi";
 import axios from "axios";
 
 Vue.use(Vuex)
@@ -57,6 +58,7 @@ export default new Vuex.Store({
         setAccount(state, payload) {
             state.account = payload
             localStorage.setItem('login', payload.login)
+            connect()
         },
 
         clearAuth(state) {

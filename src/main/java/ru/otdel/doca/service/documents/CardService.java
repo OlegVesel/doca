@@ -50,6 +50,10 @@ public class CardService {
             card.setIsDeleted(true);
             cardRepo.save(card);
         } else {
+            List<Order> executorsOrders = orderRepo.findByCardCustomer_Id(id);
+            orderRepo.deleteAll(executorsOrders);
+            Optional<Order> customerOrder = orderRepo.findByCardExecutor_Id(id);
+            customerOrder.ifPresent(orderRepo::delete);
             cardRepo.delete(card);
         }
         return true;
@@ -98,8 +102,12 @@ public class CardService {
         if (cardCustomer != null && reports != null) {
             cardCustomer.getDocuments().addAll(reports);
             cardRepo.save(cardCustomer);
+            //нашу карточку помечаем как удаленную
+            deleteCardById(request.getId());
             return saveCard(request);
         } else if (cardCustomer != null) {
+            //нашу карточку помечаем как удаленную
+            deleteCardById(request.getId());
             return saveCard(request);
         }
         throw new RuntimeException("При сохранении что-то пошло не так");

@@ -5,18 +5,16 @@ let userLogin = localStorage.getItem('login')
 let notifications = []
 
 export function connect()  {
-    console.log('start webs')
-    console.log('user', userLogin)
+    userLogin = localStorage.getItem('login')
     stompClient = new Client({
         brokerURL : "ws://192.168.0.106:7777/ws",
         onConnect : () => {
-            if (userLogin == null)
-                userLogin = localStorage.getItem('login')
             stompClient.subscribe(
                 `/specific/notification/${userLogin}`, result => {
                     notifications.forEach(notification => notification(JSON.parse(result.body)))
                 }
             );
+            console.log('subscribeBy', userLogin)
         },
         onStompError : frame => {
             console.log("error in stomp ",  frame)

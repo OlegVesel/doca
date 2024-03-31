@@ -21,7 +21,7 @@
             <v-btn
                     color="success"
                     @click="executeCard"
-                    :disabled="card.executorOrder.needReport && reports.length === 0"
+                    :disabled="isDisabled"
             >
                 Ок
             </v-btn>
@@ -38,6 +38,7 @@
 <script>
 import FileInput from "@/components/document/FileInput";
 import cardApi from "@/api/cardApi";
+import {mapMutations} from "vuex";
 export default {
     name: "CardExecuteDialog",
     props: ['titleText', 'dialogText', 'color', 'card'],
@@ -53,16 +54,22 @@ export default {
     components: {
         FileInput
     },
+    computed:{
+        isDisabled(){
+            return this.card.executorOrder.needReport && this.reports.length === 0
+        }
+    },
     methods: {
+        ...mapMutations(['deleteCardFromList']),
         setFile(files) {
             this.reports = files
         },
         async executeCard(){
-            console.log('asdsadsa')
             this.cardRequest.id = this.card.id
             this.cardRequest.multipartFiles = this.reports
             let response = await cardApi.executeCard(this.cardRequest)
             console.log(response)
+            this.deleteCardFromList(response.data.id)
         }
     }
 }
