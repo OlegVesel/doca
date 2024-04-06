@@ -1,21 +1,19 @@
 <template>
     <v-card>
         <v-row class="pa-0 ma-0">
-            <v-col cols="2">
+            <v-col cols="3">
                 <h3 v-if="card.title"> {{ card.title }} </h3>
                 <h3 v-else>Без названия</h3>
-            </v-col>
-            <v-col cols="2">
-                {{ card.created }}
             </v-col>
             <v-col cols="4">
                 <v-chip color="green lighten-1">
                     Файлов в карточке: {{ card.documents?.length }}
                 </v-chip>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
+
                 <v-tooltip
-                        v-if="card.executorOrder !== null && card.executorOrder.executeTo !== null"
+                        v-if="card.executorOrder !== null && card.executorOrder.executeTo !== null && !card.executorOrder.executed "
                         top
                 >
                     <template v-slot:activator="{ on, attrs }">
@@ -27,7 +25,8 @@
                             mdi-alert-outline
                         </v-icon>
                     </template>
-                    <p class="tooltip__text">Карточка назначена {{ card.executorOrder.loginCustomer }} к {{ card.executorOrder.executeTo.split('T')[1] }}
+                    <p class="tooltip__text">Карточка назначена {{ card.executorOrder.loginCustomer }} к
+                        {{ card.executorOrder.executeTo.split('T')[1] }}
                         {{ card.executorOrder.executeTo.split('T')[0] }}</p>
                 </v-tooltip>
                 <v-tooltip
@@ -36,7 +35,7 @@
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-icon
-                                color="primary"
+                                :color=" (card.customerOrder.executed ? `success` : `primary`)"
                                 v-bind="attrs"
                                 v-on="on"
                         >
@@ -47,12 +46,15 @@
                         [{{ card.customerOrder.loginExecutors.join(', ') }}]. </p>
                     <p class="tooltip__text">Исполнить к {{ card.customerOrder.executeTo.split('T')[1] }}
                         {{ card.customerOrder.executeTo.split('T')[0] }} </p>
-                    <p class="tooltip__text">Осталось: {{ getTimeToExecute }}</p>
                 </v-tooltip>
+                <template v-if="card.customerOrder !== null && card.customerOrder.executeTo !== null">
+                    <span v-if="!card.customerOrder.executed && getTimeToExecute !== '-1'"  class="ml-2 blue-grey--text">Осталось: {{getTimeToExecute}}</span>
+                    <span v-else-if="!card.customerOrder.executed" class="ml-2 red--text">Просрочена!</span>
+                </template>
             </v-col>
             <v-col cols="2" align="end">
                 <v-btn
-                        v-if="card.executorOrder"
+                        v-if="card.executorOrder !== null && !card.executorOrder.executed"
                         color="success"
                         icon
                         small
@@ -177,7 +179,7 @@ export default {
                     return hours + ' часа(ов)'
                 else if (minutes >= 1)
                     return minutes + ' минут(а)'
-                return ' Просрочена!'
+                return '-1'
             }
             return ''
         }

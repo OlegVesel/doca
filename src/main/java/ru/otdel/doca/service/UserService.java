@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import ru.otdel.doca.model.entity.user.Role;
 import ru.otdel.doca.model.entity.user.UserEntity;
 import ru.otdel.doca.model.facade.UserFacade;
-import ru.otdel.doca.model.request.UserRequest;
+import ru.otdel.doca.model.request.user.UserRequest;
+import ru.otdel.doca.model.request.user.UserShortRequest;
 import ru.otdel.doca.model.response.user.ShortUserResponse;
 import ru.otdel.doca.model.response.user.UserResponse;
 import ru.otdel.doca.repo.RoleRepo;
@@ -34,7 +35,7 @@ public class UserService {
 
 
 
-    public UserResponse register(UserRequest request) {
+    public UserResponse register(UserShortRequest request) {
         UserEntity userEntity = new UserEntity();
         //todo: проверка на существующее имя пользователя
         Role userRole = roleRepo.findByName("ROLE_USER");
@@ -70,7 +71,7 @@ public class UserService {
     }
 
 
-    public UserResponse login(UserRequest request) {
+    public UserResponse login(UserShortRequest request) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getLogin(),
@@ -95,5 +96,11 @@ public class UserService {
                 .stream()
                 .map(userFacade::entityToShortResponse)
                 .toList();
+    }
+
+    public UserResponse update(UserRequest request) {
+        UserEntity userEntity = userFacade.requestToEntity(request);
+        UserEntity saved = userRepo.save(userEntity);
+        return userFacade.entityToResponse(saved);
     }
 }

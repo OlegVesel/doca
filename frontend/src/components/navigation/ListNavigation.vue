@@ -8,7 +8,7 @@
             </v-list-item-icon>
             <v-list-item-title>Мои документы</v-list-item-title>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="/profile" selectable color="primary">
             <v-list-item-icon>
                 <v-icon>mdi-account-outline</v-icon>
             </v-list-item-icon>

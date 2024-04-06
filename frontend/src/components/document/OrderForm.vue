@@ -83,7 +83,7 @@ export default {
         ...mapActions(['getUsersAction', 'getCardById']),
         async send() {
             this.order.cardId = this.card.id
-            if (this.order.executeTo != null)
+            if (this.order.dateExecuteTo != null)
                 this.order.executeTo = `${this.order.dateExecuteTo}T${this.order.timeExecuteTo}`
             let response = await orderApi.assignExecutor(this.order)
             if (response.status === 200){

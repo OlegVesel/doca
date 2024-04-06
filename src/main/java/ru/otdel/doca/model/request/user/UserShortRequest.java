@@ -1,10 +1,10 @@
-package ru.otdel.doca.model.request;
+package ru.otdel.doca.model.request.user;
 
 
 import lombok.Data;
 
 @Data
-public class UserRequest {
+public class UserShortRequest {
     private String login;
     private String password;
 }

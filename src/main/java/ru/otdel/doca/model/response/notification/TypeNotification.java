@@ -1,5 +1,5 @@
 package ru.otdel.doca.model.response.notification;
 
 public enum TypeNotification {
-    EXECUTE, ORDER
+    EXECUTE, ORDER, CHANGE_USER
 }

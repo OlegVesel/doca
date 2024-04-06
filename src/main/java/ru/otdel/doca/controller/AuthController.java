@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otdel.doca.model.request.UserRequest;
+import ru.otdel.doca.model.request.user.UserShortRequest;
 import ru.otdel.doca.model.response.user.UserResponse;
 import ru.otdel.doca.service.UserService;
 
@@ -18,7 +18,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserRequest request){
+    public ResponseEntity<UserResponse> login(@RequestBody UserShortRequest request){
         UserResponse response = userService.login(request);
         if (response != null)
             return ResponseEntity.ok(response);
@@ -26,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserResponse> registrationUser(@RequestBody UserRequest request){
+    public ResponseEntity<UserResponse> registrationUser(@RequestBody UserShortRequest request){
         UserResponse response = userService.register(request);
         if (response != null)
             return ResponseEntity.ok(response);

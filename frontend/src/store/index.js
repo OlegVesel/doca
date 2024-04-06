@@ -23,6 +23,7 @@ export default new Vuex.Store({
         cards:[],
         typeDocs:[],
         users: [],
+        user:{}
     },
     getters: {
         isAdmin(state) {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
         },
         getUsers(state){
             return state.users
+        },
+        getUser(state){
+            return state.user
         }
     },
     mutations: {
@@ -94,6 +98,9 @@ export default new Vuex.Store({
         },
         setUsers(state, list){
             state.users = list
+        },
+        setUser(state, user){
+            state.user = user
         }
     },
     actions: {
@@ -115,6 +122,30 @@ export default new Vuex.Store({
             commit('clearState')
             axios.defaults.headers.common['token'] = ''
             await router.push('/login')
+        },
+        async getUserByLogin({commit}, login){
+            try {
+                let { status, data } = await userApi.getUserByLogin(login)
+                if (status === 200){
+                    commit('setUser', data)
+                }
+            } catch (err){
+                if (err.request.status === 401){
+                    await router.push("login")
+                }
+            }
+        },
+        async updateUser({commit}, user){
+            try {
+                let { status, data } = await userApi.updateUser(user)
+                if (status === 200){
+                    commit('setUser', data)
+                }
+            } catch (err){
+                if (err.request.status === 401){
+                    await router.push("login")
+                }
+            }
         },
         async getCardsFromServer({commit}) {
             try {

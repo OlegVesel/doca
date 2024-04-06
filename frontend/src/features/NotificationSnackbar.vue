@@ -5,14 +5,13 @@
             top
             :color="color"
             text
-            elevation="24"
+            elevation="16"
             :timeout=timeout
             :value="true"
     >
         <v-row align="center">
             <v-col cols="1">
                 <v-icon
-                        large
                         :color="color"
                 >
                     {{ icon }}

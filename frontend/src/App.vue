@@ -94,6 +94,15 @@ export default {
                     this.getCardById(notification.body.executorOrder?.cardCustomerId)
                     break
                 }
+                case 'CHANGE_USER' :{
+                    item = {
+                        text: notification.body,
+                        color: 'success',
+                        icon: 'mdi-check-bold',
+                        timeout : -1
+                    }
+                    break
+                }
             }
             this.notifications.push(item)
             this.showNotification = true
