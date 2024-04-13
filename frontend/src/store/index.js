@@ -106,11 +106,11 @@ export default new Vuex.Store({
     actions: {
         async loginAction({commit}, account) {
             try {
-                let data = await authApi.authorize(account)
-                let result = data.data
-                commit('setAccount', result)
+                let { data } = await authApi.authorize(account)
+                commit('setAccount', data)
                 commit('setAuth', true)
-                commit('setToken', result.tokenType + result.accessToken)
+                commit('setToken', data.tokenType + data.accessToken)
+                commit('setUser', data)
                 axios.defaults.headers.common['token'] = localStorage.getItem('token')
                 await router.push('/')
             } catch (err) {

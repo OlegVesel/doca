@@ -1,11 +1,10 @@
 package ru.otdel.doca.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.otdel.doca.model.request.user.UserShortRequest;
 import ru.otdel.doca.model.response.user.UserResponse;
 import ru.otdel.doca.service.UserService;
@@ -31,5 +30,10 @@ public class AuthController {
         if (response != null)
             return ResponseEntity.ok(response);
         return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleException(RuntimeException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

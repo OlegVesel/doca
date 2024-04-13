@@ -36,8 +36,11 @@ public class UserService {
 
 
     public UserResponse register(UserShortRequest request) {
+        if (request.getLogin() == null || request.getLogin().isEmpty())
+            throw new RuntimeException("Логин не должен быть пустым");
+        if (findByLogin(request.getLogin()) != null)
+            throw new RuntimeException("Такой логин уже существует. Логин: " + request.getLogin());
         UserEntity userEntity = new UserEntity();
-        //todo: проверка на существующее имя пользователя
         Role userRole = roleRepo.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(userRole);

@@ -32,6 +32,7 @@
                 <router-view></router-view>
             </v-container>
         </v-main>
+
         <template v-if="showNotification">
             <notification-snackbar
                     v-for="(notification, i) in notifications" :key="i"
@@ -46,6 +47,7 @@
             </notification-snackbar>
         </template>
     </v-app>
+
 </template>
 
 <script>
@@ -73,33 +75,33 @@ export default {
         handleNotification(notification) {
             let item = {}
             switch (notification.type) {
-                case 'ORDER' :{
+                case 'ORDER' : {
                     item = {
                         text: `Вам передан документ ${notification.body.cardExecutor.title} ${notification.body.executeTo !== null ? ' на исполнение к ' + notification.body.executeTo : ''}`,
                         color: 'primary',
                         icon: 'mdi-information-outline',
-                        timeout : -1
+                        timeout: -1
                     }
                     this.addCardToList(notification.body.cardExecutor)
                     break
                 }
-                case 'EXECUTE' :{
+                case 'EXECUTE' : {
                     item = {
                         text: `${notification.body.userLogin} выполнил карточку ${notification.body.title}. ${notification.body.executorOrder.needReport !== null
-                                ? ` Файл отчета находится в документах карточки` : '' }`,
+                                ? ` Файл отчета находится в документах карточки` : ''}`,
                         color: 'success',
                         icon: 'mdi-check-bold',
-                        timeout : -1
+                        timeout: -1
                     }
                     this.getCardById(notification.body.executorOrder?.cardCustomerId)
                     break
                 }
-                case 'CHANGE_USER' :{
+                case 'CHANGE_USER' : {
                     item = {
                         text: notification.body,
                         color: 'success',
                         icon: 'mdi-check-bold',
-                        timeout : -1
+                        timeout: -1
                     }
                     break
                 }
@@ -125,4 +127,10 @@ export default {
 
 };
 </script>
+
+<style>
+#globalApp{
+    background: url("./assets/background.jpg") center no-repeat fixed;
+}
+</style>
 
