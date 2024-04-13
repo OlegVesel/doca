@@ -35,7 +35,7 @@ public class UserService {
 
 
 
-    public UserResponse register(UserShortRequest request) {
+    public UserResponse register(UserRequest request) {
         if (request.getLogin() == null || request.getLogin().isEmpty())
             throw new RuntimeException("Логин не должен быть пустым");
         if (findByLogin(request.getLogin()) != null)
@@ -47,6 +47,9 @@ public class UserService {
         userEntity.setLogin(request.getLogin());
         userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         userEntity.setRoles(userRoles);
+        userEntity.setFirstName(request.getFirstName());
+        userEntity.setLastName(request.getLastName());
+        userEntity.setPatronymic(request.getPatronymic());
         userEntity.setIsDeleted(false);
         //todo add log 'user saved'
         return userFacade.entityToResponse(userRepo.save(userEntity));

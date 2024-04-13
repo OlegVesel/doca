@@ -5,6 +5,7 @@ import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.otdel.doca.model.request.user.UserRequest;
 import ru.otdel.doca.model.request.user.UserShortRequest;
 import ru.otdel.doca.model.response.user.UserResponse;
 import ru.otdel.doca.service.UserService;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserResponse> registrationUser(@RequestBody UserShortRequest request){
+    public ResponseEntity<UserResponse> registrationUser(@RequestBody UserRequest request){
         UserResponse response = userService.register(request);
         if (response != null)
             return ResponseEntity.ok(response);

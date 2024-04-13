@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage.vue'
 import LoginPage from "@/pages/LoginPage";
 import DocumentList from "@/pages/documents/DocumentList";
 import ProfilePage from "@/pages/profile/ProfilePage";
+import UserCreate from "@/pages/settings/UserCreate";
 
 
 Vue.use(VueRouter)
@@ -12,7 +13,8 @@ const routes = [
     {path: '/', name: 'home', component: HomePage},
     {path: '/documents', name: 'documentList', component: DocumentList},
     {path: '/profile', name: 'profile', component: ProfilePage},
-    {path: '/login', name: 'login', component: LoginPage, meta: {loginPage: true, nonRequiresAuth: true}}
+    {path: '/settings', name: 'profile', component: UserCreate},
+    {path: '/login', name: 'login', component: LoginPage}
 ]
 
 const router = new VueRouter({

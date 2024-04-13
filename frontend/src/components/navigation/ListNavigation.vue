@@ -14,7 +14,7 @@
             </v-list-item-icon>
             <v-list-item-title>Профиль</v-list-item-title>
         </v-list-item>
-        <v-list-item link v-if="admin">
+        <v-list-item link v-if="admin" to="/settings" selectable color="primary">
             <v-list-item-icon>
                 <v-icon>mdi-cog-outline</v-icon>
             </v-list-item-icon>
