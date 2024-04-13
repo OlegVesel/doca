@@ -5,7 +5,7 @@ spring:
     password: 1
     driver-class-name: org.postgresql.Driver
   liquibase:
-    change-log: classpath:liquibase/start.sql
+    change-log: classpath:liquibase/table_create.xml
     user: "postgres"
     password: 1
     url: "jdbc:postgresql://localhost:5432/doca"
@@ -19,7 +19,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 jwt:
   token:
     secret: "Super1Secret2Word3To4MyToken8And9HisSoStrong"

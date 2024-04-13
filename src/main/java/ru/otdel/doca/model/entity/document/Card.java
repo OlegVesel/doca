@@ -18,6 +18,7 @@ public class Card extends BaseEntity {
     private String title;
     private String userLogin;
     private String comment;
+    @Column(name = "execute_to")
     private LocalDate executeTo;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(

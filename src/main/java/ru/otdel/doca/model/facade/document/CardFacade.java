@@ -55,7 +55,7 @@ public class CardFacade implements BaseFacade<Card, CardRequest, CardResponse> {
         response.setTitle(entity.getTitle());
         response.setComment(entity.getComment());
         response.setExecuteTo(entity.getExecuteTo());
-        if (entity.getDocuments() != null)
+        if (entity.getDocuments() != null && !entity.getDocuments().isEmpty())
             response.setDocuments(
                     entity.getDocuments()
                             .stream()
